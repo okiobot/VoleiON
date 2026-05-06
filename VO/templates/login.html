@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<section class="botoes-organizador">
+    <div class="botao-organizador">
+        <a href = "{% url 'cadastro' %}">
+            Cadastro
+        </a>
+    </div>
+</section>
+
+<form method="post">
+        {% csrf_token %}
+        <div class="login-container">
+            <div class="login-titulo">
+                <h1>Login</h1>
+            </div>
+
+            <div class="formulario-login">
+                <div class="form-login-grupo">
+                    <input type="text" name="nome" value="{{ nome_preenchido }}" required autocomplete="off" placeholder="Nome">
+                </div>
+
+                <div class="form-login-grupo">
+                    <input type="text" name="senha" required autocomplete="off" placeholder="Senha" maxlength="255">
+                </div>
+
+                <div class="botao-entrar-login">
+                    <button class="form-control-sm" id="botao-entrar-login">Entrar</button>
+                </div>
+            </div>
+        </div>
+    </form>

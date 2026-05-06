@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import *
 from django.core.validators import RegexValidator
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
 
+# Função para cadastro dos usuários
 def cadastro(request):
     try:
         if request.method == "POST":
@@ -14,6 +17,7 @@ def cadastro(request):
             numeroc = request.POST.get("numeroc")
             nomec = request.POST.get("nomec")
             quantidadec = request.POST.get("quantidadec")
+            tamanhoc = request.POST.get("tamanhoc")
             tipoc = request.POST.get("tipoc")
             confirmar_senha = request.POST.get("confirmar_senha")
             
@@ -24,9 +28,9 @@ def cadastro(request):
                             'numeroc_preenchido' : numeroc,
                             'nomec_preenchido' : nomec,
                             'quantidadec_preenchida' : quantidadec,
+                            'tamanhoc_preenchido' : tamanhoc,
                             'tipoc_preenchida' : tipoc,
-                            'cpf_preenchido' : cpf,
-                            'data_preenchida' : data}
+                            'cpf_preenchido' : cpf}
         
             validatorE = RegexValidator(regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b')
             tamanhoT = len(telefone)
@@ -41,13 +45,42 @@ def cadastro(request):
                 return render(request, 'cadastro.html', dados_preenchidos)
         
             else:
+                
+                novo_user = Usuario.objects.create(username=nome, cpf=cpf, dataA=data, telefone=telefone, funcao=funcao, numeroc=numeroc, nomec=nomec, 
+                                                   quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc) 
+                novo_user.set_password(senha)
+                novo_user.save()        
                 return render(request, 'home.html')
 
     except ValueError:
         return render(request, 'cadastro.html', dados_preenchidos)
             
     return render(request,"cadastro.html")
-
+    
+def loginU(request):
+    if request.method == "POST":
+        nome = request.POST.get("nome")
+        senha = request.POST.get("senha")
+        
+        dados_preenchidos = {"nome_preenchido" : nome,
+                             "senha_preenchida" : senha}
+        
+        user = authenticate(request, username=nome, password=senha)            
+                
+        if user is not None:
+            login(request, user)
+            return redirect("home")
+        else:
+            print("Nome ou senha incorreto")
+            return render(request, "login.html")
+        
+    else:
+        return render(request, "login.html")
+    
+@login_required
 def home(request):
-    render(request, "home.html")
+    return render(request, "home.html")
+
+def jogos(request):
+    return render(request, "jogos.html")
     

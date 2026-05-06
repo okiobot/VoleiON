@@ -20,5 +20,7 @@ from VO import views
 
 urlpatterns = [
     path('', views.cadastro, name="cadastro"),
-    path('home', views.home, name="home")
+    path('home', views.home, name="home"),
+    path('login', views.loginU, name="login"),
+    path('jogos', views.jogos, name="jogos")
 ]

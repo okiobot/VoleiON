@@ -34,7 +34,8 @@
                     <div class="form-cadastroUsu-linha">
                       <div class="form-cadastroUsu-grupo">
                         <label>Data de aniversário</label>
-                        <input name = "data" class = "form-control-sm" value="{{ data_preenchida|default:'' }}" type = "date" required style="width: 220px">
+                        <input name = "data" class = "form-control-sm" value="{{ data_preenchida|default:'' }}" type = "date" min="{% now 'Y-m-d' %}" 
+                        placeholder="dd/mm/YYYY" required style="width: 220px">
                       </div> 
                     </div>
 
@@ -99,16 +100,28 @@
                 </div>
 
                 <div class="form-cadastroUsu-linha">
-                    <div class="form-cadastroUsu-grupo">
+                  <div class="form-cadastroUsu-grupo">
                     <label for="tipoc">Tipo das camisas:</label>
-                       <select name="tipoc" id="tipoc" onchange="mostrarCampoSenha()" class = "form-control-sm" style="width: 220px">
+                       <select name="tipoc" id="tipoc" class = "form-control-sm" style="width: 220px">
                         <option value="" disabled {% if not tipoc_preenchida %}selected{% endif %}>Selecione</option>
-                        <option value="pp" {% if tipoc_preenchida == "pp" %}selected{% endif %}>"Tamanho PP = Dimensões: Altura 66 x Torax 46 x Quadril 46"</option>
-                        <option value="p" {% if tipoc_preenchida == "p" %}selected{% endif %}>"Tamanho P = Dimensões: Altura 69 x Torax 48 x Quadril 48"</option>
-                        <option value="m" {% if tipoc_preenchida == "m" %}selected{% endif %}>"Tamanho M = Dimensões: Altura 71 x Torax 52 x Quadril 52"</option>
-                        <option value="g" {% if tipoc_preenchida == "g" %}selected{% endif %}>"Tamanho G = Dimensões: Altura 73 x Torax 55 x Quadril 55"</option>
-                        <option value="gg" {% if tipoc_preenchida == "gg" %}selected{% endif %}>"Tamanho GG = Dimensões: Altura 76 x Torax 59 x Quadril 59"</option>
-                        <option value="exg" {% if tipoc_preenchida == "exg" %}selected{% endif %}>"Tamanho EXG = Dimensões: Altura 83 x Torax 67 x Quadril 67"</option>
+                        <option value="sem" {% if tipoc_preenchida == "sem" %}selected{% endif %}>Sem mangas</option>
+                        <option value="com" {% if tipoc_preenchida == "com" %}selected{% endif %}>Com mangas</option>
+                       </select>
+                    </div>
+                </div>
+
+
+                <div class="form-cadastroUsu-linha">
+                    <div class="form-cadastroUsu-grupo">
+                    <label for="tamanhoc">Tamanho das camisas:</label>
+                       <select name="tamanhoc" id="tamanhoc" onchange="mostrarCampoSenha()" class = "form-control-sm" style="width: 220px">
+                        <option value="" disabled {% if not tamanhoc_preenchida %}selected{% endif %}>Selecione</option>
+                        <option value="pp" {% if tamanhoc_preenchida == "pp" %}selected{% endif %}>"Tamanho PP = Dimensões: Altura 66 x Torax 46 x Quadril 46"</option>
+                        <option value="p" {% if tamanhoc_preenchida == "p" %}selected{% endif %}>"Tamanho P = Dimensões: Altura 69 x Torax 48 x Quadril 48"</option>
+                        <option value="m" {% if tamanhoc_preenchida == "m" %}selected{% endif %}>"Tamanho M = Dimensões: Altura 71 x Torax 52 x Quadril 52"</option>
+                        <option value="g" {% if tamanhoc_preenchida == "g" %}selected{% endif %}>"Tamanho G = Dimensões: Altura 73 x Torax 55 x Quadril 55"</option>
+                        <option value="gg" {% if tamanhoc_preenchida == "gg" %}selected{% endif %}>"Tamanho GG = Dimensões: Altura 76 x Torax 59 x Quadril 59"</option>
+                        <option value="exg" {% if tamanhoc_preenchida == "exg" %}selected{% endif %}>"Tamanho EXG = Dimensões: Altura 83 x Torax 67 x Quadril 67"</option>
                        </select>
                     </div>
 
@@ -118,3 +131,9 @@
                     </div>
                 </form>
             </body>
+        
+<div class="botao-organizador">
+  <a href = "{% url 'login' %}">
+      Login
+  </a>
+</div>

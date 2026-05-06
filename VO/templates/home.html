@@ -4,3 +4,9 @@
 <head>
     teste
 </head>
+<body>
+<form action= "{% url 'jogos' %}" method="post">
+        {% csrf_token %}
+        <button class="form-control-sm" id="botao-entrar-login">Jogos</button>
+    </form>
+</body>

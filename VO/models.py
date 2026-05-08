@@ -5,10 +5,11 @@ class Usuario(AbstractUser):
 # Informações principais do usuário
     nome = models.CharField(max_length=300, null=False)
     dataA = models.DateField()
-    cpf = models.IntegerField()
+    cpf = models.CharField(max_length=11, null=False)
     telefone = models.CharField(max_length=13, unique=True, null=False)
     funcao = models.CharField(max_length=70, choices=[("levantador", "Levantador"),("atacante1","Atacante 1 (Ponteiro)"),
                                                       ("atacante2","Atacante 2 (Oposto)"),("defesa","Defesa (Líbero)")])
+
 
 # Informações da camisa
     nomec = models.CharField(max_length=150, null=False)

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    
+<head>
+    Usuários cadastrados
+</head>
+
+<body>
+    <table>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Telefone</th>
+        <th>Data de Aniversário</th>
+        <th>CPF</th>
+    </tr>
+        {% for usuario in usuarios %}
+        <tr>
+            <td>{{ usuario.id }}</td>
+            <td>{{ usuario.nome }}</td>
+            <td>{{ usuario.telefone }}</td>
+            <td>{{ usuario.dataA }}</td>
+            <td>{{ usuario.cpf }}</td>
+        {% endfor %}
+        </tr>
+    </table>
+    
+        <a href = "{% url 'home' %}">Voltar</a>
+    </form>
+</body>

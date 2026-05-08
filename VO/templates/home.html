@@ -5,8 +5,7 @@
     teste
 </head>
 <body>
-<form action= "{% url 'jogos' %}" method="post">
-        {% csrf_token %}
-        <button class="form-control-sm" id="botao-entrar-login">Jogos</button>
+<a href = "{% url 'ver_usuarios' %}">
+        <button class="form-control-sm" id="botao-entrar-login">Ver usuários</button>
     </form>
 </body>

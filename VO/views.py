@@ -77,10 +77,17 @@ def loginU(request):
     else:
         return render(request, "login.html")
     
-@login_required
 def home(request):
     return render(request, "home.html")
 
-def jogos(request):
-    return render(request, "jogos.html")
+def ver_usuario(request):
+    usuario_id = request.user.id
+    
+    if not usuario_id:
+        print("erro")
+        return redirect("login")
+    
+    usuarios = {"usuarios" : Usuario.objects.all()}
+    
+    return render(request, "ver_usuario.html", usuarios)
     

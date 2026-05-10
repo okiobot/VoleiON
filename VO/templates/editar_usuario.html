@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<head>Editar Usuário</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+    <div>
+        <label>Editar nome</label>
+        <input name="nome" value="{{ nome_preenchido|default:'' }}" type="text" required>
+    </div>
+
+    <hr>
+    Dados da camisa
+    <div>
+        <label>Nome da camisa</label>
+        <input name="nomec" value="{{ nomec_preenchido|default:'' }}" type="text" required>
+    </div>
+
+    <button>Editar</button>
+</form>
+
+    <a href = "{% url 'home' %}">Voltar</a>
+</body>

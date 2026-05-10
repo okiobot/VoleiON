@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.core.validators import RegexValidator
 from django.contrib.auth import login, authenticate
@@ -90,4 +90,27 @@ def ver_usuario(request):
     usuarios = {"usuarios" : Usuario.objects.all()}
     
     return render(request, "ver_usuario.html", usuarios)
+
+def editar_usuario(request):
+    usuario_id = request.user.id
     
+    usuario = get_object_or_404(Usuario, id = usuario_id)
+    
+    if request.method == "POST":
+        nome = request.POST.get("nome")
+        nomec = request.POST.get("nomec")
+        
+        usuario.nome = nome
+        usuario.nomec = nomec
+        usuario.save()
+
+        Registro.objects.create(usuario_id = usuario_id, acao = "Edição de perfil")
+        return redirect("home")
+    
+    else: 
+        return render(request, "editar_usuario.html")
+    
+def registros(request):
+    registros = {'registros' : Registro.objects.all().order_by("-data_hora")}
+    
+    return render(request, "registros.html", registros)

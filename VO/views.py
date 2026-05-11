@@ -4,6 +4,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 import json
+from django.http import JsonResponse
 # Função para cadastro dos usuários
 def cadastro(request):
     try:
@@ -130,6 +131,10 @@ def registro_jogo(request):
             data_hora=data_jogos,
         )
         novo_jogo.save()
+
+        return JsonResponse({
+            "id": novo_jogo.id
+        })
 
     registros = Registro.objects.all()
 

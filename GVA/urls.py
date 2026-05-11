@@ -19,10 +19,12 @@ from django.urls import path
 from VO import views
 
 urlpatterns = [
-    path('', views.cadastro, name="cadastro"),
-    path('home', views.home, name="home"),
+    path('', views.home, name="home"),
+    path('cadastrar', views.cadastro, name="cadastro"),
     path('login', views.loginU, name="login"),
-    path('ver_usuarios', views.ver_usuario, name="ver_usuarios"),
-    path('editar_usuario', views.editar_usuario, name="editar_usuario"),
-    path('registros', views.registros, name="registros")
+    path('usuarios', views.ver_usuario, name="ver_usuarios"),
+    path('edição', views.editar_usuario, name="editar_usuario"),
+    path('registrar', views.registro_jogo, name="registro_jogo"),
+    path('deletar/<int:id>/', views.deletar_jogo, name='deletar_jogo')
 ]
+

@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .models import *
 from django.core.validators import RegexValidator
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
-
+import json
 # Função para cadastro dos usuários
 def cadastro(request):
     try:
@@ -53,7 +53,7 @@ def cadastro(request):
                 return render(request, 'home.html')
 
     except ValueError:
-        return render(request, 'cadastro.html', dados_preenchidos)
+        return render(request, 'Html/cadastro.html', dados_preenchidos)
             
     return render(request,"cadastro.html")
     
@@ -72,13 +72,13 @@ def loginU(request):
             return redirect("home")
         else:
             print("Nome ou senha incorreto")
-            return render(request, "login.html")
+            return render(request, "Html/login.html")
         
     else:
-        return render(request, "login.html")
+        return render(request, "Html/login.html")
     
 def home(request):
-    return render(request, "home.html")
+    return render(request, "Html/home.html")
 
 def ver_usuario(request):
     usuario_id = request.user.id
@@ -89,9 +89,10 @@ def ver_usuario(request):
     
     usuarios = {"usuarios" : Usuario.objects.all()}
     
-    return render(request, "ver_usuario.html", usuarios)
+    return render(request, "Html/ver_usuario.html", usuarios)
 
 def editar_usuario(request):
+    
     usuario_id = request.user.id
     
     usuario = get_object_or_404(Usuario, id = usuario_id)
@@ -108,9 +109,47 @@ def editar_usuario(request):
         return redirect("home")
     
     else: 
-        return render(request, "editar_usuario.html")
+        return render(request, "Html/editar_usuario.html")
     
-def registros(request):
-    registros = {'registros' : Registro.objects.all().order_by("-data_hora")}
+def registro_jogo(request):
+    from datetime import datetime
     
-    return render(request, "registros.html", registros)
+    if request.method == "POST":
+        data_jogo = request.POST.get("data_hora")
+
+        if not data_jogo:
+            return HttpResponse("O campo data de início e final são obrigatórios")
+
+        try:
+            data_jogos = datetime.strptime(data_jogo, "%Y-%m-%d").date()
+        except ValueError:
+            return HttpResponse("O campo data deve ser uma data válida")
+
+        novo_jogo = Registro(
+            acao=request.POST.get("acao"),
+            data_hora=data_jogos,
+        )
+        novo_jogo.save()
+
+    registros = Registro.objects.all()
+
+    eventos_json = []
+
+    for registro in registros:
+
+        eventos_json.append({
+            "id": registro.id,
+            "title": registro.acao,
+            "start": registro.data_hora.strftime("%Y-%m-%d")
+        })
+
+    return render(request, "Html/registros.html", {
+        "eventos_json": eventos_json
+    })
+
+def deletar_jogo(request, id):
+    jogo = Registro.objects.get(id=id)
+    jogo.delete()
+
+    return redirect('registro_jogo')
+

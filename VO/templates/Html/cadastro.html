@@ -34,7 +34,7 @@
                     <div class="form-cadastroUsu-linha">
                       <div class="form-cadastroUsu-grupo">
                         <label>Data de aniversário</label>
-                        <input name = "data" class = "form-control-sm" value="{{ data_preenchida|default:'' }}" type = "date" min="{% now 'Y-m-d' %}" 
+                        <input name = "data" class = "form-control-sm" value="{{ data_preenchida|default:'' }}" type = "date" max="{% now 'Y-m-d' %}" 
                         placeholder="dd/mm/YYYY" required style="width: 220px">
                       </div> 
                     </div>

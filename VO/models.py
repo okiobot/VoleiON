@@ -4,7 +4,6 @@ from django.utils import timezone
 
 class Usuario(AbstractUser, PermissionsMixin):
 # Informações principais do usuário
-    nome = models.CharField(max_length=300, null=False)
     dataA = models.DateField()
     cpf = models.CharField(max_length=11, null=False)
     telefone = models.CharField(max_length=13, unique=True, null=False)
@@ -27,13 +26,13 @@ class Usuario(AbstractUser, PermissionsMixin):
     
 class Jogo(models.Model):
     dia = models.DateField()
-    participantes = models.ManyToManyField(Usuario, related_name="jogos")
+    participantes = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     vencedor = models.CharField(max_length=200)
     
 class Registro(models.Model):
     data_hora = models.DateField(default = timezone.now)
-    acao = models.TextField(max_length=255)
-
+    participantes = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    
 class Log(models.Model):
     data_hora = models.DateField(default = timezone.now)
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)

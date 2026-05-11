@@ -50,12 +50,12 @@ def cadastro(request):
                                                    quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc) 
                 novo_user.set_password(senha)
                 novo_user.save()        
-                return render(request, 'home.html')
+                return render(request, 'Html/home.html')
 
     except ValueError:
         return render(request, 'Html/cadastro.html', dados_preenchidos)
             
-    return render(request,"cadastro.html")
+    return render(request,"Html/cadastro.html")
     
 def loginU(request):
     if request.method == "POST":
@@ -100,12 +100,14 @@ def editar_usuario(request):
     if request.method == "POST":
         nome = request.POST.get("nome")
         nomec = request.POST.get("nomec")
+        numeroc = request.POST.get("numeroc")
         
-        usuario.nome = nome
+        usuario.username = nome
         usuario.nomec = nomec
+        usuario.numeroc = numeroc
         usuario.save()
 
-        Registro.objects.create(usuario_id = usuario_id, acao = "Edição de perfil")
+        Log.objects.create(usuario_id = usuario_id, acao = "Edição de perfil")
         return redirect("home")
     
     else: 
@@ -126,7 +128,6 @@ def registro_jogo(request):
             return HttpResponse("O campo data deve ser uma data válida")
 
         novo_jogo = Registro(
-            acao=request.POST.get("acao"),
             data_hora=data_jogos,
         )
         novo_jogo.save()
@@ -139,7 +140,7 @@ def registro_jogo(request):
 
         eventos_json.append({
             "id": registro.id,
-            "title": registro.acao,
+            "title": "jogo de volei",
             "start": registro.data_hora.strftime("%Y-%m-%d")
         })
 

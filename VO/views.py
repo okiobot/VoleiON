@@ -118,7 +118,7 @@ def registro_jogo(request):
         data_jogo = request.POST.get("data_hora")
 
         if not data_jogo:
-            return HttpResponse("O campo data de início e final são obrigatórios")
+            return HttpResponse("O campo data de início são obrigatórios")
 
         try:
             data_jogos = datetime.strptime(data_jogo, "%Y-%m-%d").date()

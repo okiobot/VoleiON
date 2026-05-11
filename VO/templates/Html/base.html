@@ -18,19 +18,18 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-        
           <li class="nav-item active">
-            <a class="nav-link" href={% url 'editar_usuario' %}>Perfil</a>
+            <a class="nav-link" href={% url 'editar_usuario' %}>editar_usuario</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href={% url 'registro_jogo' %}>Sair</a>
+            <a class="nav-link" href={% url 'registro_jogo' %}>Cadastrar jogo</a>
           </li>
         </ul>
       </div>
     </nav>
 
     <div class="container" s = 40px>
-      {% block content %} 
+      {% block content %}
         <section class="botoes-principais">
           <div class="botao">
             <a href="{% url 'registro_jogo' %}">

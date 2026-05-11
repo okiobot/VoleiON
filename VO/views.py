@@ -127,7 +127,6 @@ def registro_jogo(request):
             return HttpResponse("O campo data deve ser uma data válida")
 
         novo_jogo = Registro(
-            acao=request.POST.get("acao"),
             data_hora=data_jogos,
         )
         novo_jogo.save()
@@ -144,7 +143,6 @@ def registro_jogo(request):
 
         eventos_json.append({
             "id": registro.id,
-            "title": registro.acao,
             "start": registro.data_hora.strftime("%Y-%m-%d")
         })
 

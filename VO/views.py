@@ -117,6 +117,14 @@ def editar_usuario(request):
 def registro_jogo(request):
     from datetime import datetime
     
+    usuario_id = request.user.id
+    
+    if not usuario_id:
+        print("erro")
+        return redirect("login")
+    
+    usuario = get_object_or_404(Usuario, id = usuario_id)
+    
     if request.method == "POST":
         data_jogo = request.POST.get("data_hora")
 
@@ -129,7 +137,9 @@ def registro_jogo(request):
             return HttpResponse("O campo data deve ser uma data válida")
 
         novo_jogo = Registro(
+            nome = "Jogo",
             data_hora=data_jogos,
+            participantes= usuario
         )
         novo_jogo.save()
 
@@ -145,6 +155,7 @@ def registro_jogo(request):
 
         eventos_json.append({
             "id": registro.id,
+            "title" : registro.nome,
             "start": registro.data_hora.strftime("%Y-%m-%d")
         })
 

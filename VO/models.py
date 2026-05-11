@@ -30,6 +30,7 @@ class Jogo(models.Model):
     vencedor = models.CharField(max_length=200)
     
 class Registro(models.Model):
+    nome = models.TextField(max_length=255)
     data_hora = models.DateField(default = timezone.now)
     participantes = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     

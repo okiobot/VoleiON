@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
             "X-CSRFToken": getCookie("csrftoken")
         },
         body: new URLSearchParams({
-            acao: titulo,
+            nome: titulo,
             data_hora: info.dateStr
         })
     })

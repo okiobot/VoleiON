@@ -145,7 +145,6 @@ def registro_jogo(request):
 
         eventos_json.append({
             "id": registro.id,
-            "title": "jogo de volei",
             "start": registro.data_hora.strftime("%Y-%m-%d")
         })
 

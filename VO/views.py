@@ -4,6 +4,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 import json
+from django.http import JsonResponse
 # Função para cadastro dos usuários
 def cadastro(request):
     try:
@@ -120,7 +121,7 @@ def registro_jogo(request):
         data_jogo = request.POST.get("data_hora")
 
         if not data_jogo:
-            return HttpResponse("O campo data de início e final são obrigatórios")
+            return HttpResponse("O campo data de início são obrigatórios")
 
         try:
             data_jogos = datetime.strptime(data_jogo, "%Y-%m-%d").date()
@@ -131,6 +132,10 @@ def registro_jogo(request):
             data_hora=data_jogos,
         )
         novo_jogo.save()
+
+        return JsonResponse({
+            "id": novo_jogo.id
+        })
 
     registros = Registro.objects.all()
 

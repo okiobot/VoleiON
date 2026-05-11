@@ -3,25 +3,7 @@
 {% load static %}
 
 {% block content %}
-<form action="{% url 'registro_jogo' %}" method="post">
-    {% csrf_token %}
 
-    <div>
-        <h1>Cadastro de Eventos</h1>
-    </div> 
-
-    <div>
-        <label>Nome:</label>
-        <input name="acao" class="form-control-sm" type="text">
-    </div>
-
-    <div>
-        <label>Data do jogo:</label>
-        <input name="data_hora" type="date" class="form-control-sm">
-    </div>
-
-    <button class="form-control-sm">Enviar</button>
-</form>
 
 <head>
     <meta charset="UTF-8">

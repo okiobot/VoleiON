@@ -29,7 +29,7 @@ class Jogo(models.Model):
     dia = models.DateField()
     participantes = models.ManyToManyField(Usuario, related_name="jogos")
     vencedor = models.CharField(max_length=200)
-    
+
 class Registro(models.Model):
     data_hora = models.DateField(default = timezone.now)
     acao = models.TextField(max_length=255)

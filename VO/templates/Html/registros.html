@@ -1,5 +1,6 @@
-{% load static %}
+{% extends "Html/base.html" %}
 
+{% load static %}
 
 {% block content %}
 <form action="{% url 'registro_jogo' %}" method="post">
@@ -21,7 +22,6 @@
 
     <button class="form-control-sm">Enviar</button>
 </form>
-{% endblock content %}
 
 <head>
     <meta charset="UTF-8">
@@ -49,3 +49,4 @@
 
 </body>
 </html>
+{% endblock %}

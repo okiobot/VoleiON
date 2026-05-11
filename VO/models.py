@@ -32,6 +32,10 @@ class Jogo(models.Model):
     
 class Registro(models.Model):
     data_hora = models.DateField(default = timezone.now)
+    acao = models.TextField(max_length=255)
+
+class Log(models.Model):
+    data_hora = models.DateField(default = timezone.now)
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
     jogo = models.ForeignKey(Jogo, on_delete=models.SET_NULL, null=True)
     acao = models.TextField(max_length=255)

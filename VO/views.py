@@ -78,7 +78,7 @@ def loginU(request):
         return render(request, "Html/login.html")
     
 def home(request):
-    return render(request, "Html/home.html")
+    return render(request, "Html/base.html")
 
 def ver_usuario(request):
     usuario_id = request.user.id

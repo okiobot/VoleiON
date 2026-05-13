@@ -14,9 +14,12 @@
         <label>Nome da camisa</label>
         <input name="nomec" value="{{ nomec_preenchido|default:'' }}" type="text" required>
     </div>
-
+    <div>
+        <label>Número da camisa</label>
+        <input name="numeroc" value="{{ numeroc_preenchido|default:'' }}" type="number" required>
+    </div>
+    
     <button>Editar</button>
 </form>
-
     <a href = "{% url 'home' %}">Voltar</a>
 </body>

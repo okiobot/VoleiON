@@ -4,6 +4,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 import json
+from django.http import JsonResponse
 # Função para cadastro dos usuários
 def cadastro(request):
     try:
@@ -50,12 +51,12 @@ def cadastro(request):
                                                    quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc) 
                 novo_user.set_password(senha)
                 novo_user.save()        
-                return render(request, 'home.html')
+                return render(request, 'Html/home.html')
 
     except ValueError:
         return render(request, 'Html/cadastro.html', dados_preenchidos)
             
-    return render(request,"cadastro.html")
+    return render(request,"Html/cadastro.html")
     
 def loginU(request):
     if request.method == "POST":
@@ -100,12 +101,14 @@ def editar_usuario(request):
     if request.method == "POST":
         nome = request.POST.get("nome")
         nomec = request.POST.get("nomec")
+        numeroc = request.POST.get("numeroc")
         
-        usuario.nome = nome
+        usuario.username = nome
         usuario.nomec = nomec
+        usuario.numeroc = numeroc
         usuario.save()
 
-        Registro.objects.create(usuario_id = usuario_id, acao = "Edição de perfil")
+        Log.objects.create(usuario_id = usuario_id, acao = "Edição de perfil")
         return redirect("home")
     
     else: 
@@ -114,11 +117,19 @@ def editar_usuario(request):
 def registro_jogo(request):
     from datetime import datetime
     
+    usuario_id = request.user.id
+    
+    if not usuario_id:
+        print("erro")
+        return redirect("login")
+    
+    usuario = get_object_or_404(Usuario, id = usuario_id)
+    
     if request.method == "POST":
         data_jogo = request.POST.get("data_hora")
 
         if not data_jogo:
-            return HttpResponse("O campo data de início e final são obrigatórios")
+            return HttpResponse("O campo data de início são obrigatórios")
 
         try:
             data_jogos = datetime.strptime(data_jogo, "%Y-%m-%d").date()
@@ -126,10 +137,15 @@ def registro_jogo(request):
             return HttpResponse("O campo data deve ser uma data válida")
 
         novo_jogo = Registro(
-            acao=request.POST.get("acao"),
+            nome = "Jogo",
             data_hora=data_jogos,
+            participantes= usuario
         )
         novo_jogo.save()
+
+        return JsonResponse({
+            "id": novo_jogo.id
+        })
 
     registros = Registro.objects.all()
 
@@ -139,7 +155,7 @@ def registro_jogo(request):
 
         eventos_json.append({
             "id": registro.id,
-            "title": registro.acao,
+            "title" : registro.nome,
             "start": registro.data_hora.strftime("%Y-%m-%d")
         })
 

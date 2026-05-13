@@ -28,13 +28,14 @@ class Camisa(models.Model):
     
 class Jogo(models.Model):
     dia = models.DateField()
-    participantes = models.ManyToManyField(Usuario, related_name="jogos")
+    participantes = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     vencedor = models.CharField(max_length=200)
 
 class Registro(models.Model):
+    nome = models.TextField(max_length=255)
     data_hora = models.DateField(default = timezone.now)
-    acao = models.TextField(max_length=255)
-
+    participantes = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    
 class Log(models.Model):
     data_hora = models.DateField(default = timezone.now)
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)

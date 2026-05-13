@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.utils import timezone
 
 class Usuario(AbstractUser, PermissionsMixin):
-# Informações principais do usuário(nome, data de nascimento, cpf, telefone, função).
+# Informações principais do usuário(nome, data de nascimento, cpf, telefone, função)
     nome = models.CharField(max_length=300, null=False)
     data_nasc = models.DateField()
     cpf = models.CharField(max_length=11, null=False)

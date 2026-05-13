@@ -10,8 +10,9 @@ class Usuario(AbstractUser, PermissionsMixin):
     funcao = models.CharField(max_length=70, choices=[("levantador", "Levantador"),("atacante1","Atacante 1 (Ponteiro)"),
                                                       ("atacante2","Atacante 2 (Oposto)"),("defesa","Defesa (Líbero)")])
 
-
-# Informações da camisa
+class Camisa(models.Model):
+# Informações da camisa(número, nome, quantidade, tipo, tamanho)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="camisas")
     nomec = models.CharField(max_length=150, null=False)
     numeroc = models.IntegerField()
     quantidadec = models.IntegerField(choices=[(1,"1"),(2,"2"),(3,"3")])
@@ -30,7 +31,7 @@ class Jogo(models.Model):
     dia = models.DateField()
     participantes = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     vencedor = models.CharField(max_length=200)
-    
+
 class Registro(models.Model):
     nome = models.TextField(max_length=255)
     data_hora = models.DateField(default = timezone.now)

@@ -28,6 +28,7 @@ urlpatterns = [
     path('deletar/<int:id>/', views.deletar_jogo, name='deletar_jogo'),
     path('tesouraria', views.tesouraria, name="tesouraria"),
     path('deletar', views.deletar_usuario, name="deletar_usuario"),
-    path('registros', views.logs, name="logs")
+    path('registros', views.logs, name="logs"),
+    path('sair', views.sair, name="sair")
 ]
 

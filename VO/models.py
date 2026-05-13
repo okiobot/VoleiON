@@ -4,15 +4,17 @@ from django.utils import timezone
 
 class Usuario(AbstractUser, PermissionsMixin):
 # Informações principais do usuário
+    username = models.CharField(max_length=255, unique=False)
     dataA = models.DateField()
     cpf = models.CharField(max_length=11, null=False, unique=True)
     telefone = models.CharField(max_length=13, unique=True, null=False)
     funcao = models.CharField(max_length=70, choices=[("levantador", "Levantador"),("atacante1","Atacante 1 (Ponteiro)"),
                                                       ("atacante2","Atacante 2 (Oposto)"),("defesa","Defesa (Líbero)")])
 
-class Camisa(models.Model):
+    USERNAME_FIELD = "cpf"
+    REQUIRED_FIELDS = ['username']
+
 # Informações da camisa(número, nome, quantidade, tipo, tamanho)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="camisas")
     nomec = models.CharField(max_length=150, null=False)
     numeroc = models.IntegerField()
     quantidadec = models.IntegerField(choices=[(1,"1"),(2,"2"),(3,"3")])
@@ -40,5 +42,5 @@ class Registro(models.Model):
 class Log(models.Model):
     data_hora = models.DateField(default = timezone.now)
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
-    jogo = models.ForeignKey(Jogo, on_delete=models.SET_NULL, null=True)
+    jogo = models.IntegerField(null=True, blank=True)
     acao = models.TextField(max_length=255)

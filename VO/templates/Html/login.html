@@ -17,7 +17,8 @@
 
             <div class="formulario-login">
                 <div class="form-login-grupo">
-                    <input type="text" name="nome" value="{{ nome_preenchido }}" required autocomplete="off" placeholder="Nome">
+                    <input name="cpf" value="{{ cpf_preenchido }}" type = "text" 
+                        inputmode="numeric" pattern="\d*" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required placeholder="CPF">
                 </div>
 
                 <div class="form-login-grupo">

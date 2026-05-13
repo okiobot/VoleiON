@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<head>
+    Registros
+</head>
+
+<body>
+    <div>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Data/Hora</th>
+                <th>ID do Usuário</th>
+                <th>Nome do Usuário</th>
+                <th>ID do Jogo</th>
+                <th>Ação</th>
+            </tr>
+            {% for registro in registros %}
+            <tr>
+                <td> {{ registro.id }} </td>
+                <td> {{ registro.data_hora }} </td>
+                <td> {{ registro.usuario.id }} </td>
+                <td> {{ registro.usuario }} </td>
+                <td> {{ registro.jogo }} </td>
+                <td> {{ registro.acao }} </td>
+            {% endfor %}
+            </tr>
+        </table>
+    </div>
+</body>
+
+<a href = "{% url 'home' %}">Voltar</a>

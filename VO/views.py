@@ -5,6 +5,8 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
+from django.contrib.auth.hashers import check_password
+
 # Função para cadastro dos usuários
 def cadastro(request):
     try:
@@ -51,6 +53,7 @@ def cadastro(request):
                                                    quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc) 
                 novo_user.set_password(senha)
                 novo_user.save()        
+                Log.objects.create(usuario_id=novo_user.id, acao="Cadastro de usuários")
                 return render(request, 'Html/home.html')
 
     except ValueError:
@@ -142,6 +145,7 @@ def registro_jogo(request):
             participantes= usuario
         )
         novo_jogo.save()
+        Log.objects.create(usuario_id=usuario_id, jogo=novo_jogo.id, acao="Criação de jogo")
 
         return JsonResponse({
             "id": novo_jogo.id
@@ -169,3 +173,59 @@ def deletar_jogo(request, id):
 
     return redirect('registro_jogo')
 
+def tesouraria(request):
+    usuario_id = request.user.id
+    
+    if not usuario_id:
+        print("erro")
+        return redirect("login")
+    
+    if request.method == "POST":
+        cancelar_id = request.POST.get("cancelar")
+
+        if cancelar_id:
+            Usuario.objects.filter(id=cancelar_id).update(pagamento="Pendente")
+            Log.objects.create(usuario_id=usuario_id, acao="Cancelamento de pagamento")
+            
+        else:
+            pagos = request.POST.getlist("usuarios_pagos")
+            if pagos:
+                Usuario.objects.filter(id__in=pagos).update(pagamento="Pago")
+                Log.objects.create(usuario_id=usuario_id, acao="Confirmação de pagamento")
+        
+        return redirect("tesouraria")
+    
+    return render(request, "Html/tesouraria.html", {"usuarios" : Usuario.objects.all()})
+
+def deletar_usuario(request):
+    usuario_id = request.user.id
+    
+    if not usuario_id:
+        print("erro")
+        return redirect("login")
+    
+    senha = request.POST.get("senha")
+        
+    if request.method == "POST":
+        usuario = get_object_or_404(Usuario, id = usuario_id)
+    
+        if not check_password(senha, usuario.password):
+            print("Senha incorreta")
+            return render(request, "Html/deletar_usuario.html")
+        
+        else:
+            print("Perfil deletado")
+            Log.objects.create(usuario=usuario_id, acao="Exclusão de usuário")
+            usuario.delete()
+            return redirect("login")
+    
+    return render(request, "Html/deletar_usuario.html")
+        
+def logs(request):
+    usuario_id = request.user.id
+    
+    if not usuario_id:
+        print("erro")
+        return redirect("login")
+    
+    return render(request, "Html/logs.html", {"registros" : Log.objects.all()})

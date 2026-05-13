@@ -169,3 +169,11 @@ def deletar_jogo(request, id):
 
     return redirect('registro_jogo')
 
+def get_aniver_all(request, id):
+    aniversariantes = Usuario.objects.annotate(
+        dia_aniversario=models.functions.ExtractDay('data_nasc'),
+        mes_aniversario=models.functions.ExtractMonth('data_nasc')
+    ).order_by('mes_aniversario', 'dia_aniversario').only('nome', 'data_nasc')
+
+    #Não sei o url coerreto para essa função, deixei essa como placeholde
+    return render(request, "Html/aniversariantes.html", {"aniversariantes": aniversariantes})

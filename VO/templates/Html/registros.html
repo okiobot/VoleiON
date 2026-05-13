@@ -3,32 +3,19 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'Css/registros.css' %}">
 
 
-<head>
-    <meta charset="UTF-8">
-    <title>Calendário</title>
+<script defer src="{% static 'Java_Script/registros.js' %}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-
-    <script defer src="{% static 'Java_Script/registros.js' %}"></script>
-
-    <style>
-        #calendar {
-            max-width: 900px;
-            margin: 40px auto;
-        }
-    </style>
-</head>
-
-<body>
+<div class="calendario-container">
 
     <h1>Calendário</h1>
 
     <div id="calendar"></div>
 
-    {{ eventos_json|json_script:"eventos-data" }}
+</div>
 
-</body>
-</html>
+{{ eventos_json|json_script:"eventos-data" }}
+
 {% endblock %}

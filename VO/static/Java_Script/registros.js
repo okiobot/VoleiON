@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const titulo = "Jogo";
 
-    fetch("/registrar", {
+    fetch("/registrar/", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",

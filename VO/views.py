@@ -47,11 +47,11 @@ def cadastro(request):
         
             else:
                 
-                novo_user = Usuario.objects.create(username=nome, cpf=cpf, dataA=data, telefone=telefone, funcao=funcao, numeroc=numeroc, nomec=nomec, 
+                novo_user = Usuario.objects.create_user(username=nome, cpf=cpf, dataA=data, telefone=telefone, funcao=funcao, numeroc=numeroc, nomec=nomec, 
                                                    quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc) 
                 novo_user.set_password(senha)
                 novo_user.save()        
-                return render(request, 'Html/home.html')
+                return render(request, 'Html/base.html')
 
     except ValueError:
         return render(request, 'Html/cadastro.html', dados_preenchidos)
@@ -79,7 +79,21 @@ def loginU(request):
         return render(request, "Html/login.html")
     
 def home(request):
-    return render(request, "Html/base.html")
+    registros = Registro.objects.all()
+
+    eventos_json = []
+
+    for registro in registros:
+
+        eventos_json.append({
+            "id": registro.id,
+            "title": f"Jogo {registro.id}",
+            "start": registro.data_hora.strftime("%Y-%m-%d")
+        })
+
+    return render(request, "Html/base.html", {
+        "eventos_json": eventos_json
+    })
 
 def ver_usuario(request):
     usuario_id = request.user.id
@@ -129,7 +143,7 @@ def registro_jogo(request):
         data_jogo = request.POST.get("data_hora")
 
         if not data_jogo:
-            return HttpResponse("O campo data de início são obrigatórios")
+            return HttpResponse("O campo data de início é obrigatório")
 
         try:
             data_jogos = datetime.strptime(data_jogo, "%Y-%m-%d").date()
@@ -137,7 +151,6 @@ def registro_jogo(request):
             return HttpResponse("O campo data deve ser uma data válida")
 
         novo_jogo = Registro(
-            nome = "Jogo",
             data_hora=data_jogos,
             participantes= usuario
         )
@@ -155,17 +168,18 @@ def registro_jogo(request):
 
         eventos_json.append({
             "id": registro.id,
-            "title" : registro.nome,
+            "title" : f"Jogo {registro.id}",
             "start": registro.data_hora.strftime("%Y-%m-%d")
         })
-
-    return render(request, "Html/registros.html", {
-        "eventos_json": eventos_json
-    })
+    print(eventos_json)
+    return render(request, "Html/registros.html", {"eventos_json": eventos_json})
 
 def deletar_jogo(request, id):
     jogo = Registro.objects.get(id=id)
     jogo.delete()
 
     return redirect('registro_jogo')
+
+def jogos_disponiveis(request):
+    pass
 

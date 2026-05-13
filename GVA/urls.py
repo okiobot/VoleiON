@@ -25,6 +25,6 @@ urlpatterns = [
     path('usuarios', views.ver_usuario, name="ver_usuarios"),
     path('edição', views.editar_usuario, name="editar_usuario"),
     path('registrar', views.registro_jogo, name="registro_jogo"),
-    path('deletar/<int:id>/', views.deletar_jogo, name='deletar_jogo')
+    path('deletar/<int:id>/', views.deletar_jogo, name='deletar_jogo'),
 ]
 

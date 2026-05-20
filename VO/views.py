@@ -4,6 +4,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 import json
+from datetime import date
 from django.http import JsonResponse
 from django.contrib.auth.hashers import check_password
 
@@ -49,8 +50,8 @@ def cadastro(request):
         
             else:
                 
-                novo_user = Usuario.objects.create(username=nome, cpf=cpf, dataA=data, telefone=telefone, funcao=funcao,
-                                                   numeroc=numeroc, nomec=nomec, quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc)
+                novo_user = Usuario.objects.create(username=nome, cpf=cpf, data_nasc=data, telefone=telefone, funcao=funcao, numeroc=numeroc, nomec=nomec, 
+                                                   quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc) 
                 novo_user.set_password(senha)
                 novo_user.save()        
                  
@@ -178,13 +179,33 @@ def deletar_jogo(request, id):
 
     return redirect('registro_jogo')
 
+#recebe um usuario e retorna True se a data de nascimento for igual a data atual
+def aniversariante_Check(usuario):
+
+    data_atual = date.today()
+
+    if usuario.data_nasc.day == data_atual.day and usuario.data_nasc.month == data_atual.month:
+        return True
+    return False
+
+#retorna retorna todos os aniversariantes do dia no BD
+def aniversariante_dia(request, id):
+   usuario = get_object_or_404(Usuario, id = usuario_id)
+    
+    data_atual = date.today()
+    
+    aniversariantes_dia = Usuario.objects.filter(data_nasc__day=data_atual.day, data_nasc__month=data_atual.month).only('nome', 'data_nasc')
+    
+    #Não sei o url coerreto para essa função, deixei essa como placeholder
+    return render(request, "Html/aniversariantes_dia.html", {"aniversariantes_dia": aniversariantes_dia})
+    
 def tesouraria(request):
     usuario_id = request.user.id
     
     if not usuario_id:
         print("erro")
         return redirect("login")
-    
+      
     if request.method == "POST":
         cancelar_id = request.POST.get("cancelar")
 
@@ -202,6 +223,17 @@ def tesouraria(request):
     
     return render(request, "Html/tesouraria.html", {"usuarios" : Usuario.objects.all()})
 
+#retorna todos os aniversariantes do mes no BD
+def aniversariante_mes(request, id):
+    usuario = get_object_or_404(Usuario, id = usuario_id)
+    
+    data_atual = date.today()
+    
+    aniversariantes_mes = Usuario.objects.filter(data_nasc__month=data_atual.month).only('nome', 'data_nasc')
+    
+    #Não sei o url coerreto para essa função, deixei essa como placeholder
+    return render(request, "Html/aniversariantes_mes.html", {"aniversariantes_mes": aniversariantes_mes})
+  
 def deletar_usuario(request):
     usuario_id = request.user.id
     
@@ -240,7 +272,6 @@ def get_aniver_all(request, id):
         dia_aniversario=models.functions.ExtractDay('data_nasc'),
         mes_aniversario=models.functions.ExtractMonth('data_nasc')
     ).order_by('mes_aniversario', 'dia_aniversario').only('nome', 'data_nasc')
-
     #Não sei o url coerreto para essa função, deixei essa como placeholde
     return render(request, "Html/aniversariantes.html", {"aniversariantes": aniversariantes})
 

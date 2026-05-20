@@ -190,14 +190,14 @@ def aniversariante_Check(usuario):
 
 #retorna retorna todos os aniversariantes do dia no BD
 def aniversariante_dia(request, id):
+   
    usuario = get_object_or_404(Usuario, id = usuario_id)
-    
-    data_atual = date.today()
-    
-    aniversariantes_dia = Usuario.objects.filter(data_nasc__day=data_atual.day, data_nasc__month=data_atual.month).only('nome', 'data_nasc')
-    
-    #Não sei o url coerreto para essa função, deixei essa como placeholder
-    return render(request, "Html/aniversariantes_dia.html", {"aniversariantes_dia": aniversariantes_dia})
+   
+   data_atual = date.today()
+   
+   aniversariantes_dia = Usuario.objects.filter(data_nasc__day=data_atual.day, data_nasc__month=data_atual.month).only('username', 'data_nasc')
+   
+   return render(request, "Html/aniversariantes_dia.html", {"aniversariantes_dia": aniversariantes_dia})
     
 def tesouraria(request):
     usuario_id = request.user.id
@@ -229,7 +229,7 @@ def aniversariante_mes(request, id):
     
     data_atual = date.today()
     
-    aniversariantes_mes = Usuario.objects.filter(data_nasc__month=data_atual.month).only('nome', 'data_nasc')
+    aniversariantes_mes = Usuario.objects.filter(data_nasc__month=data_atual.month).only('username', 'data_nasc')
     
     #Não sei o url coerreto para essa função, deixei essa como placeholder
     return render(request, "Html/aniversariantes_mes.html", {"aniversariantes_mes": aniversariantes_mes})
@@ -267,13 +267,13 @@ def logs(request):
     
     return render(request, "Html/logs.html", {"registros" : Log.objects.all()})
 
-def get_aniver_all(request, id):
+def get_aniver_all(request):
     aniversariantes = Usuario.objects.annotate(
         dia_aniversario=models.functions.ExtractDay('data_nasc'),
         mes_aniversario=models.functions.ExtractMonth('data_nasc')
-    ).order_by('mes_aniversario', 'dia_aniversario').only('nome', 'data_nasc')
+    ).order_by('mes_aniversario', 'dia_aniversario').only('username', 'data_nasc')
     #Não sei o url coerreto para essa função, deixei essa como placeholde
-    return render(request, "Html/aniversariantes.html", {"aniversariantes": aniversariantes})
+    return render(request, "Html/aniversariantes_all.html", {"aniversariantes": aniversariantes})
 
 def sair(request):
     if "usuario_id" in request.session:

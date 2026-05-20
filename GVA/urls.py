@@ -21,10 +21,11 @@ from VO import views
 urlpatterns = [
     path('', views.loginU, name="login"),
     path('home', views.home, name="home"),
-    path('cadastrar', views.cadastro, name="cadastro"),
+    path('cadastro', views.cadastro, name="cadastro"),
     path('usuarios', views.ver_usuario, name="ver_usuarios"),
     path('edição', views.editar_usuario, name="editar_usuario"),
     path('registrar', views.registro_jogo, name="registro_jogo"),
     path('deletar/<int:id>/', views.deletar_jogo, name='deletar_jogo'),
+    path('aniversariantes_all/', views.get_aniver_all, name="aniversariantes_all"),
 ]
 

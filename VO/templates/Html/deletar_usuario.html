@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+<head>
+    Deletar usuário
+</head>
+
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <label for="senha"> Senha </label>
+        <input name="senha" type="text" required placeholder="Digite sua senha">
+
+    <button type="submit"> Confirmar </button>
+</body>
+
+<a href = "{% url 'home' %}">Voltar</a>

@@ -27,5 +27,9 @@ urlpatterns = [
     path('registrar', views.registro_jogo, name="registro_jogo"),
     path('deletar/<int:id>/', views.deletar_jogo, name='deletar_jogo'),
     path('aniversariantes_all/', views.get_aniver_all, name="aniversariantes_all"),
+    path('tesouraria', views.tesouraria, name="tesouraria"),
+    path('deletar', views.deletar_usuario, name="deletar_usuario"),
+    path('registros', views.logs, name="logs"),
+    path('sair', views.sair, name="sair")
 ]
 

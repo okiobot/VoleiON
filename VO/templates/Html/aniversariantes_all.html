@@ -27,7 +27,7 @@
             <tbody>
                 {% for usuario in aniversariantes %}
                 <tr>
-                    <td>{{ usuario.nome }}</td>
+                    <td>{{ usuario.username }}</td>
                     <td>{{ usuario.data_nasc|date:"d/m/Y" }}</td>
                 </tr>
                 {% endfor %}

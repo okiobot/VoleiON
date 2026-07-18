@@ -143,10 +143,13 @@ def registro_jogo(request):
         novo_jogo = Registro(
             nome = "Jogo",
             data_hora=data_jogos,
-            participantes= usuario
+            criador= usuario
         )
         
         novo_jogo.save()
+        
+        novo_jogo.participantes.add(usuario)
+        
         Log.objects.create(usuario_id=usuario_id, jogo=novo_jogo.id, acao="Criação de jogo")
 
         return JsonResponse({
@@ -169,6 +172,44 @@ def registro_jogo(request):
         "eventos_json": eventos_json
     })
 
+from django.http import JsonResponse
+
+def detalhe_jogo(request, id):
+    jogo = get_object_or_404(Registro, id=id)
+    usuario_atual = request.user
+    
+    lista_participantes = [u.username for u in jogo.participantes.all()]
+    
+    ja_inscrito = jogo.participantes.filter(id=usuario_atual.id).exists()
+    
+    criador = (jogo.criador == usuario_atual)
+    
+    dados = {
+        "id": jogo.id,
+        "nome": jogo.nome,
+        "data_hora": jogo.data_hora.strftime("%d/%m/%Y"), 
+        "organizador": jogo.criador.username,
+        "quant_participantes": jogo.participantes.count(),
+        "participantes" : lista_participantes,
+        "ja_inscrito" : ja_inscrito,
+        "criador" : criador}
+    
+    return JsonResponse(dados)
+
+def inscrever_jogo(request, id):
+    if request.method == "POST":
+        jogo = get_object_or_404(Registro, id=id)
+        jogo.participantes.add(request.user)
+        return JsonResponse({"sucesso" : True, "mensagem" : "Inscrição realizada"})
+    return JsonResponse({"sucesso" : False}, status = 400)
+
+def sair_jogo(request, id):
+    if request.method == "POST":
+        jogo = get_object_or_404(Registro, id=id)
+        jogo.participantes.remove(request.user)
+        return JsonResponse({"sucesso" : True, "mensagem" : "Saída realizada"})
+    return JsonResponse({"sucesso" : False}, status = 400)
+    
 def deletar_jogo(request, id):
     usuario_id = request.user.id
     jogo = Registro.objects.get(id=id)

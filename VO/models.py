@@ -44,7 +44,8 @@ class Inscrito(models.Model):
 class Registro(models.Model):
     nome = models.TextField(max_length=255)
     data_hora = models.DateTimeField(default = timezone.now)
-    participantes = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    participantes = models.ManyToManyField(Usuario, related_name='jogos_inscritos', blank=True)
+    criador = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     
 class Log(models.Model):
     data_hora = models.DateField(default = timezone.now)

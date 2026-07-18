@@ -1,34 +1,74 @@
 {% extends "Html/base.html" %}
-
 {% load static %}
 
 {% block content %}
 
-
-<head>
-    <meta charset="UTF-8">
-    <title>Calendário</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-
-    <script defer src="{% static 'Java_Script/registros.js' %}"></script>
-
-    <style>
-        #calendar {
-            max-width: 900px;
-            margin: 40px auto;
-        }
-    </style>
-</head>
-
-<body>
-
-    <h1>Calendário</h1>
-
+<div class="calendar-container">
     <div id="calendar"></div>
+    <div id="painel-detalhes" class="sidebar-detalhes hidden">
+        <button id="fechar-painel" class="btn-fechar">&times;</button>
+        <h3>Detalhes da Partida</h3>
+        <hr>
+        <p><strong>Evento:</strong> <span id="detalhe-nome">-</span></p>
+        <p><strong>Data:</strong> <span id="detalhe-data">-</span></p>
+        <p><strong>Organizador:</strong> <span id="detalhe-organizador">-</span></p>
 
-    {{ eventos_json|json_script:"eventos-data" }}
+        <p><strong>Total de Jogadores:</strong> <span id="detalhe-qtd">0</span></p>
+        <p><strong>Jogadores </strong></p>
+        <ul id="lista-participantes"></ul>
+        
+        <button id="btn-inscrever" class="btn-sucess btn-action hidden">Inscrever-se </button>
+        <button id="btn-sair-jogo" class="btn-warning btn-action hidden">Sair do Jogo </button>
+        <button id="btn-deletar-jogo" class="btn-danger btn-action hidden">Apagar Jogo </button>
+    </div>
+</div>
 
-</body>
-</html>
+<style>
+    .calendar-container {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        width: 100%;
+    }
+    #calendar {
+        flex: 1;
+    }
+    .sidebar-detalhes {
+        width: 300px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        position: relative;
+    }
+    .hidden {
+        display: none !important;
+    }
+    .btn-fechar {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    .btn-danger {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 15px;
+        width: 100%;
+    }
+</style>
+
+<script>
+    window.dadosEventosCalendario = {{ eventos_json|safe }};
+</script>
+
+<script src="{% static 'Java_Script/registros.js' %}"></script>
 {% endblock %}

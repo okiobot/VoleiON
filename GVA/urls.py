@@ -30,6 +30,8 @@ urlpatterns = [
     path('tesouraria', views.tesouraria, name="tesouraria"),
     path('deletar', views.deletar_usuario, name="deletar_usuario"),
     path('registros', views.logs, name="logs"),
+    path('jogo/<int:id>/', views.detalhe_jogo, name="detalhe_jogo"),
+    path('jogo/<int:id>/inscrever/', views.inscrever_jogo, name="inscrever_jogo"),
+    path('jogo/<int:id>/sair/', views.sair_jogo, name="sair_jogo"),
     path('sair', views.sair, name="sair")
 ]
-

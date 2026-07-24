@@ -26,8 +26,10 @@
 
                     <div class="formulario-login">
                         <div class="form-login-grupo">
-                            <input type="text" name="nome" value="{{ nome_preenchido }}" required autocomplete="off" placeholder="Nome">
+                            <input name="cpf" value="{{ cpf_preenchido }}" type = "text" 
+                                inputmode="numeric" pattern="\d*" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '');" autocomplete="off" required placeholder="CPF">
                         </div>
+                    
 
                         <div class="form-login-grupo">
                             <input type="password" name="senha" required autocomplete="off" placeholder="Senha" maxlength="255">
@@ -37,7 +39,6 @@
                             <button class="form-control-sm" id="botao-entrar-login">Entrar</button>
                         </div>
                     </div>
-                </div>
         </form>
         
         <div class="botao-organizador">

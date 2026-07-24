@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head>
+    teste
+</head>
+
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>Nome</th>    
+                <th>CPF</th>    
+                <th>Status</th>    
+            </tr>
+            {% for usuario in usuarios %}
+            <tr>
+                <td> {{ usuario.username }} </td>
+                <td> {{ usuario.cpf }} </td>
+                <td> 
+                    {% if usuario.pagamento == "Pago" %}
+                    Pago
+                    <input type="checkbox" checked disabled>     
+                    <button type="submit" name="cancelar" value="{{ usuario.id }}"> Cancelar </button>
+
+                    {% else %}
+                    Pendente
+                    <input type="checkbox" name="usuarios_pagos" value="{{ usuario.id }}"> 
+                    {% endif %}
+
+                </td>
+            {% endfor %}
+            </tr>
+        </table>
+        <button>Registrar</button>    
+    </form>
+</body>
+<a href = "{% url 'home' %}">Voltar</a>

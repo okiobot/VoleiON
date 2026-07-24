@@ -116,12 +116,12 @@
                     <label for="tamanhoc">Tamanho das camisas:</label>
                        <select name="tamanhoc" id="tamanhoc" onchange="mostrarCampoSenha()" class = "form-control-sm" style="width: 220px">
                         <option value="" disabled {% if not tamanhoc_preenchida %}selected{% endif %}>Selecione</option>
-                        <option value="pp" {% if tamanhoc_preenchida == "pp" %}selected{% endif %}>"Tamanho PP = Dimensões: Altura 66 x Torax 46 x Quadril 46"</option>
-                        <option value="p" {% if tamanhoc_preenchida == "p" %}selected{% endif %}>"Tamanho P = Dimensões: Altura 69 x Torax 48 x Quadril 48"</option>
-                        <option value="m" {% if tamanhoc_preenchida == "m" %}selected{% endif %}>"Tamanho M = Dimensões: Altura 71 x Torax 52 x Quadril 52"</option>
-                        <option value="g" {% if tamanhoc_preenchida == "g" %}selected{% endif %}>"Tamanho G = Dimensões: Altura 73 x Torax 55 x Quadril 55"</option>
-                        <option value="gg" {% if tamanhoc_preenchida == "gg" %}selected{% endif %}>"Tamanho GG = Dimensões: Altura 76 x Torax 59 x Quadril 59"</option>
-                        <option value="exg" {% if tamanhoc_preenchida == "exg" %}selected{% endif %}>"Tamanho EXG = Dimensões: Altura 83 x Torax 67 x Quadril 67"</option>
+                        <option value="pp" {% if tamanhoc_preenchida == "pp" %}selected{% endif %}>Tamanho PP = Dimensões: Altura 66 x Torax 46 x Quadril 46</option>
+                        <option value="p" {% if tamanhoc_preenchida == "p" %}selected{% endif %}>Tamanho P = Dimensões: Altura 69 x Torax 48 x Quadril 48</option>
+                        <option value="m" {% if tamanhoc_preenchida == "m" %}selected{% endif %}>Tamanho M = Dimensões: Altura 71 x Torax 52 x Quadril 52</option>
+                        <option value="g" {% if tamanhoc_preenchida == "g" %}selected{% endif %}>Tamanho G = Dimensões: Altura 73 x Torax 55 x Quadril 55</option>
+                        <option value="gg" {% if tamanhoc_preenchida == "gg" %}selected{% endif %}>Tamanho GG = Dimensões: Altura 76 x Torax 59 x Quadril 59</option>
+                        <option value="exg" {% if tamanhoc_preenchida == "exg" %}selected{% endif %}>Tamanho EXG = Dimensões: Altura 83 x Torax 67 x Quadril 67</option>
                        </select>
                     </div>
 
@@ -132,8 +132,7 @@
                 </form>
             </body>
         
-<div class="botao-organizador">
   <a href = "{% url 'login' %}">
       Login
   </a>
-</div>
+

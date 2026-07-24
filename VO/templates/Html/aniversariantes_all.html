@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Aniversariantes</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        table { border-collapse: collapse; width: 100%; max-width: 700px; }
+        th, td { border: 1px solid #ccc; padding: 0.8rem; text-align: left; }
+        th { background: #f7f7f7; }
+        caption { margin-bottom: 1rem; font-size: 1.3rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Aniversariantes</h1>
+    <p>Teste simples para a exibição de aniversariantes.</p>
+
+    {% if aniversariantes %}
+        <table>
+            <caption>Lista de aniversariantes</caption>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Data de Nascimento</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in aniversariantes %}
+                <tr>
+                    <td>{{ usuario.username }}</td>
+                    <td>{{ usuario.data_nasc|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum aniversariante encontrado.</p>
+    {% endif %}
+
+</body>
+</html>

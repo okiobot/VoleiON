@@ -4,16 +4,17 @@ from django.utils import timezone
 
 class Usuario(AbstractUser, PermissionsMixin):
 # Informações principais do usuário
-    nome = models.CharField(max_length=300, null=False)
-    dataA = models.DateField()
-    cpf = models.CharField(max_length=11, null=False)
+    username = models.CharField(max_length=255, unique=False)
+    data_nasc = models.DateField()
+    cpf = models.CharField(max_length=11, null=False, unique=True)
     telefone = models.CharField(max_length=13, unique=True, null=False)
     funcao = models.CharField(max_length=70, choices=[("levantador", "Levantador"),("atacante1","Atacante 1 (Ponteiro)"),
                                                       ("atacante2","Atacante 2 (Oposto)"),("defesa","Defesa (Líbero)")])
 
-class Camisa(models.Model):
+    USERNAME_FIELD = "cpf"
+    REQUIRED_FIELDS = ['username']
+
 # Informações da camisa(número, nome, quantidade, tipo, tamanho)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="camisas")
     nomec = models.CharField(max_length=150, null=False)
     numeroc = models.IntegerField()
     quantidadec = models.IntegerField(choices=[(1,"1"),(2,"2"),(3,"3")])
@@ -24,19 +25,30 @@ class Camisa(models.Model):
                                                          ("g","Tamanho G = Dimensões: Altura 73 x Torax 55 x Quadril 55"),
                                                          ("gg","Tamanho GG = Dimensões: Altura 76 x Torax 59 x Quadril 59"),
                                                          ("xg","Tamanho XG = Dimensões: Altura 78 x Torax 62 x Quadril 62"),
-                                                         ("exg","Tamanho EXG = Dimensões: Altura 83 x Torax 67 x Quadril 67")])
+                                                         ("exg","Tamanho EXG = Dimensões: Altura 83 x Torax 67 x Quadril 67")],
+                                                         default="m")
+    
+    pagamento = models.CharField(max_length=50, default="Pendente" ,choices=[("pago","Pago"),("pendente","Pendente")], null=False)
     
 class Jogo(models.Model):
     dia = models.DateField()
     participantes = models.ManyToManyField(Usuario, related_name="jogos")
     vencedor = models.CharField(max_length=200)
 
-class Registro(models.Model):
-    data_hora = models.DateField(default = timezone.now)
-    participantes = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
+class Inscrito(models.Model):
+    id = models.AutoField(primary_key=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    jogo = models.ForeignKey(Jogo, on_delete=models.CASCADE)
+    data_inscricao = models.DateTimeField(default=timezone.now)
 
+class Registro(models.Model):
+    nome = models.TextField(max_length=255)
+    data_hora = models.DateTimeField(default = timezone.now)
+    participantes = models.ManyToManyField(Usuario, related_name='jogos_inscritos', blank=True)
+    criador = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    
 class Log(models.Model):
     data_hora = models.DateField(default = timezone.now)
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
-    jogo = models.ForeignKey(Jogo, on_delete=models.SET_NULL, null=True)
+    jogo = models.IntegerField(null=True, blank=True)
     acao = models.TextField(max_length=255)

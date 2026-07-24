@@ -27,6 +27,13 @@ urlpatterns = [
     path('registrar/', views.registro_jogo, name="registro_jogo"),
     path('deletar/<int:id>/', views.deletar_jogo, name='deletar_jogo'),
     path('agenda/', views.jogos_disponiveis, name='jogos_disponiveis'),
-    path("Logout/", views.logout, name="Logout")
-]
+    path("Logout/", views.logout, name="Logout"),
 
+    path('aniversariantes_all/', views.get_aniver_all, name="aniversariantes_all"),
+    path('tesouraria', views.tesouraria, name="tesouraria"),
+    path('deletar', views.deletar_usuario, name="deletar_usuario"),
+    path('registros', views.logs, name="logs"),
+    path('jogo/<int:id>/', views.detalhe_jogo, name="detalhe_jogo"),
+    path('jogo/<int:id>/inscrever/', views.inscrever_jogo, name="inscrever_jogo"),
+    path('jogo/<int:id>/sair/', views.sair_jogo, name="sair_jogo"),
+]

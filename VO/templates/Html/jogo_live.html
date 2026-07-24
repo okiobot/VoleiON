@@ -1,0 +1,278 @@
+{% extends "Html/base.html" %}
+
+{% block content %}
+<div class="partida-container">
+    <h2>Partida em Andamento: {{ jogo.nome }}</h2>
+    <p class="data-partida">Data: {{ jogo.data_hora|date:"d/m/Y" }}</p>
+
+    <div class="placar-geral">
+        <div class="bloco-placar">
+            <span class="nome-time">TIME A</span>
+            <span id="placar-time-a" class="pontos-time">0</span>
+        </div>
+        <div class="versus">VS</div>
+        <div class="bloco-placar">
+            <span class="nome-time">TIME B</span>
+            <span id="placar-time-b" class="pontos-time">0</span>
+        </div>
+    </div>
+
+    <div class="quadra">
+        <div class="rede"></div> 
+        
+        <div class="lado time-a">
+            <h3>Time A</h3>
+            <ul class="jogadores-lista">
+                {% for jogador in timeA %}
+                    <li class="avatar-jogador" data-time="a" data-pontos="0" onclick="gerenciarPonto(event, this, 'somar')">
+                        <span class="nome-player">{{ jogador.username }}</span>
+                        
+                        <div class="controles-ponto">
+                            <span class="ponto-individual">(0 pts)</span>
+                            <button class="btn-subtrair" onclick="gerenciarPonto(event, this.closest('.avatar-jogador'), 'subtrair')">−</button>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="lado time-b">
+            <h3>Time B</h3>
+            <ul class="jogadores-lista">
+                {% for jogador in timeB %}
+                    <li class="avatar-jogador" data-time="b" data-pontos="0" onclick="gerenciarPonto(event, this, 'somar')">
+                        <span class="nome-player">{{ jogador.username }}</span>
+                        
+                        <div class="controles-ponto">
+                            <span class="ponto-individual">(0 pts)</span>
+                            <button class="btn-subtrair" onclick="gerenciarPonto(event, this.closest('.avatar-jogador'), 'subtrair')">−</button>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="acoes-partida">
+        <a href="{% url 'registro_jogo' %}" class="btn-voltar">Encerrar e Voltar</a>
+    </div>
+</div>
+
+
+<script>
+function gerenciarPonto(event, elementoJogador, acao) {
+    event.stopPropagation();
+
+    const time = elementoJogador.getAttribute('data-time');
+    let pontosIndividuais = parseInt(elementoJogador.getAttribute('data-pontos'));
+
+    if (acao === 'somar') {
+        pontosIndividuais++;
+        modificarPlacarGeral(time, 1);
+        
+        elementoJogador.classList.add('ponto-somar-efeito');
+        setTimeout(() => elementoJogador.classList.remove('ponto-somar-efeito'), 200);
+
+    } else if (acao === 'subtrair') {
+        if (pontosIndividuais <= 0) return; 
+        
+        pontosIndividuais--;
+        modificarPlacarGeral(time, -1);
+        
+        elementoJogador.classList.add('ponto-subtrair-efeito');
+        setTimeout(() => elementoJogador.classList.remove('ponto-subtrair-efeito'), 200);
+    }
+
+    elementoJogador.setAttribute('data-pontos', pontosIndividuais);
+    elementoJogador.querySelector('.ponto-individual').textContent = `(${pontosIndividuais} pts)`;
+}
+
+function modificarPlacarGeral(time, valor) {
+    const idPlacar = time === 'a' ? 'placar-time-a' : 'placar-time-b';
+    const elementoPlacar = document.getElementById(idPlacar);
+    let pontosTime = parseInt(elementoPlacar.textContent);
+    
+    pontosTime += valor;
+    
+    if (pontosTime < 0) pontosTime = 0;
+    
+    elementoPlacar.textContent = pontosTime;
+}
+</script>
+
+<style>
+    .partida-container {
+        text-align: center;
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    /* Estilos do Placar Superior */
+    .placar-geral {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        margin: 20px 0;
+        background: #222;
+        padding: 15px 40px;
+        border-radius: 50px;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        display: inline-flex;
+    }
+    .bloco-placar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .nome-time {
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: #bbb;
+    }
+    .pontos-time {
+        font-size: 36px;
+        font-weight: bold;
+        color: #ffeb3b; /* Amarelo digital */
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .versus {
+        font-size: 18px;
+        color: #ff4d4d;
+        font-weight: bold;
+    }
+
+    /* Estilos do Campo */
+    .quadra {
+        display: flex;
+        position: relative;
+        background-color: #4caf50;
+        border: 4px solid #ffffff;
+        border-radius: 12px;
+        min-height: 400px;
+        margin: 20px 0;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .rede {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background-color: #ffffff;
+        z-index: 2;
+    }
+    .lado {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1;
+    }
+    .time-a { background-color: rgba(255, 255, 255, 0.05); }
+    .time-b { background-color: rgba(0, 0, 0, 0.08); }
+
+    .quadra h3 {
+        color: #ffffff;
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    }
+    .jogadores-lista {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+
+    /* Cards Interativos dos Jogadores */
+    .avatar-jogador {
+        background: #ffffff;
+        color: #333;
+        padding: 12px 20px;
+        border-radius: 30px;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        width: 80%;
+        max-width: 250px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        user-select: none; /* Evita selecionar o texto no duplo clique */
+        transition: transform 0.1s, background-color 0.2s;
+    }
+    .avatar-jogador:hover {
+        transform: scale(1.03);
+        background-color: #f0f0f0;
+    }
+    .ponto-individual {
+        font-size: 13px;
+        color: #888;
+        font-weight: normal;
+    }
+
+    /* Efeito de clique do Ponto */
+    .ponto-efeito {
+        transform: scale(0.95) !important;
+        background-color: #a3e635 !important; /* Pisca verde claro */
+    }
+
+    .btn-voltar {
+        display: inline-block;
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-top: 15px;
+
+    /* Alinhamento dos pontos individuais com o botão de menos */
+    .controles-ponto {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Estilo do Botão de Menos (-) */
+    .btn-subtrair {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn-subtrair:hover {
+        background-color: #cc0000;
+        transform: scale(1.1);
+    }
+
+    /* Efeitos de clique customizados */
+    .ponto-somar-efeito {
+        transform: scale(0.96) !important;
+        background-color: #a3e635 !important; /* Pisca Verde */
+    }
+
+    .ponto-subtrair-efeito {
+        transform: scale(0.96) !important;
+        background-color: #fca5a5 !important; /* Pisca Vermelho Claro */
+    }
+    }
+</style>
+{% endblock %}

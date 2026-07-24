@@ -33,5 +33,7 @@ urlpatterns = [
     path('jogo/<int:id>/', views.detalhe_jogo, name="detalhe_jogo"),
     path('jogo/<int:id>/inscrever/', views.inscrever_jogo, name="inscrever_jogo"),
     path('jogo/<int:id>/sair/', views.sair_jogo, name="sair_jogo"),
+    path('perfil', views.perfil, name="perfil"),
+    path('jogo/<int:id>/partida/', views.iniciar_jogo, name="partida"),
     path('sair', views.sair, name="sair")
 ]

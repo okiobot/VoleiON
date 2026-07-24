@@ -7,6 +7,10 @@ import json
 from datetime import date
 from django.http import JsonResponse
 from django.contrib.auth.hashers import check_password
+from datetime import datetime
+from random import * 
+import random
+
 
 # Função para cadastro dos usuários
 def cadastro(request):
@@ -14,7 +18,7 @@ def cadastro(request):
         if request.method == "POST":
             nome = request.POST.get("nome")
             cpf = request.POST.get("cpf")
-            data = request.POST.get("data")
+            data_string = request.POST.get("data")
             senha = request.POST.get("senha")
             telefone = request.POST.get("telefone")
             funcao = request.POST.get("funcao")
@@ -27,7 +31,7 @@ def cadastro(request):
             
             dados_preenchidos = {'nome_preenchido' : nome,
                             'telefone_preenchido' : telefone,
-                            'data_preenchida' : data,
+                            'data_preenchida' : data_string,
                             'funcao_preenchida' : funcao,
                             'numeroc_preenchido' : numeroc,
                             'nomec_preenchido' : nomec,
@@ -48,15 +52,15 @@ def cadastro(request):
                 print("O CPF não pode conter menos que 11 dígitos")
                 return render(request, 'Html/cadastro.html', dados_preenchidos)
         
-            else:
+            data_formatada = datetime.strptime(data_string, "%Y-%m-%d").date()
                 
-                novo_user = Usuario.objects.create(username=nome, cpf=cpf, data_nasc=data, telefone=telefone, funcao=funcao, numeroc=numeroc, nomec=nomec, 
-                                                   quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc) 
-                novo_user.set_password(senha)
-                novo_user.save()        
-                 
-                Log.objects.create(usuario_id=novo_user.id, acao="Cadastro de usuário")
-                return render(request, 'Html/login.html')
+            novo_user = Usuario.objects.create(username=nome, cpf=cpf, data_nasc=data_formatada, telefone=telefone, funcao=funcao, numeroc=numeroc, nomec=nomec, 
+                                                quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc) 
+            novo_user.set_password(senha)
+            novo_user.save()        
+                
+            Log.objects.create(usuario_id=novo_user.id, acao="Cadastro de usuário")
+            return render(request, 'Html/login.html')
 
     except ValueError:
         return render(request, 'Html/cadastro.html', dados_preenchidos)
@@ -119,8 +123,6 @@ def editar_usuario(request):
         return render(request, "Html/editar_usuario.html")
     
 def registro_jogo(request):
-    from datetime import datetime
-    
     usuario_id = request.user.id
     
     if not usuario_id:
@@ -161,16 +163,35 @@ def registro_jogo(request):
     eventos_json = []
 
     for registro in registros:
-
         eventos_json.append({
-            "id": registro.id,
+            "id": f'jogo_{registro.id}',
             "title" : registro.nome,
             "start": registro.data_hora.strftime("%Y-%m-%d")
         })
 
+    usuarios = Usuario.objects.all()
+    
+    now = datetime.now()
+    ano = now.year
+
+    for u in usuarios:
+        if u.data_nasc:
+            aniversario = date(ano, u.data_nasc.month, u.data_nasc.day)
+        
+            eventos_json.append({
+                "id" : f"aniversario_{u.id}",
+                "title" : f"Aniversário: {u.username}",
+                "start" : aniversario.strftime("%Y-%m-%d"),
+                "color" : "#D9BB0D",
+                "textColor" : "#000000",
+                "extendedProps" : {
+                    "tipo" : "aniversario"
+                }
+            })
+
     return render(request, "Html/registros.html", {
         "eventos_json": eventos_json
-    })
+        })
 
 from django.http import JsonResponse
 
@@ -219,6 +240,26 @@ def deletar_jogo(request, id):
     jogo.delete()
 
     return redirect('registro_jogo')
+
+def iniciar_jogo(request, id):
+    usuario_id = request.user.id
+    jogo = Registro.objects.get(id=id)
+    
+    if jogo.participantes.count() < 1:
+        print("O jogo não pode iniciar com menos de 2 jogadores")
+        #return redirect('registro_jogo')
+    
+    participantes = list(jogo.participantes.all())
+    random.shuffle(participantes)
+    
+    metade = len(participantes) // 2
+    
+    timeA = participantes[:metade]
+    timeB = participantes[metade:]
+    
+    return render(request, "Html/jogo_live.html", {"jogo" : jogo,
+                                                 "timeA" : timeA,
+                                                 "timeB" : timeB})
 
 #recebe um usuario e retorna True se a data de nascimento for igual a data atual
 def aniversariante_Check(usuario):
@@ -323,3 +364,13 @@ def sair(request):
     request.session.flush()
         
     return redirect("login")
+
+def perfil(request):
+    usuario_id = request.user.id
+    
+    if not usuario_id:
+        redirect("login")
+        
+    dados = get_object_or_404(Usuario, id=usuario_id)
+    
+    return render(request, "Html/perfil.html", {"usuario" : dados})

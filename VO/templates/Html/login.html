@@ -1,32 +1,50 @@
 <!DOCTYPE html>
+{% load static %}
 
-<section class="botoes-organizador">
-    <div class="botao-organizador">
-        <a href = "{% url 'cadastro' %}">
-            Cadastro
-        </a>
-    </div>
-</section>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'Css/login.css' %}">
+    <title>
+      {% block title %}
+        VoleiON
+      {% endblock %}
+    </title>
+  </head>
+{% block extra_css %}
+{% endblock %}
 
-<form method="post">
-        {% csrf_token %}
-        <div class="login-container">
-            <div class="login-titulo">
-                <h1>Login</h1>
-            </div>
+{% block content %}
+    <div class="login-wrapper">
+        <form method="post">
+                {% csrf_token %}
+                <div class="login-container">
+                    <div class="login-titulo">
+                        <h1>Login</h1>
+                    </div>
 
-            <div class="formulario-login">
-                <div class="form-login-grupo">
-                    <input type="text" name="nome" value="{{ nome_preenchido }}" required autocomplete="off" placeholder="Nome">
+                    <div class="formulario-login">
+                        <div class="form-login-grupo">
+                            <input type="text" name="nome" value="{{ nome_preenchido }}" required autocomplete="off" placeholder="Nome">
+                        </div>
+
+                        <div class="form-login-grupo">
+                            <input type="password" name="senha" required autocomplete="off" placeholder="Senha" maxlength="255">
+                        </div>
+
+                        <div>
+                            <button class="form-control-sm" id="botao-entrar-login">Entrar</button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-login-grupo">
-                    <input type="text" name="senha" required autocomplete="off" placeholder="Senha" maxlength="255">
-                </div>
-
-                <div class="botao-entrar-login">
-                    <button class="form-control-sm" id="botao-entrar-login">Entrar</button>
-                </div>
-            </div>
+        </form>
+        
+        <div class="botao-organizador">
+            <a href = "{% url 'cadastro' %}">
+                Não possuo cadastro
+            </a>
         </div>
-    </form>
+    </div>
+
+{% endblock %}

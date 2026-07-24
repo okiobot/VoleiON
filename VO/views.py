@@ -183,3 +183,11 @@ def deletar_jogo(request, id):
 def jogos_disponiveis(request):
     pass
 
+def logout(request):
+    usuario_id = request.user.id
+    if usuario_id in request.session:
+        del request.session[usuario_id]
+    
+    request.session.flush()
+    
+    return redirect("login")

@@ -1,0 +1,126 @@
+/*083250*/
+
+/* Container que junta o FORM e o botão inferior, centralizando ambos */
+/* Configuração para a tela de login aceitar o fundo fixo */
+.login-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: calc(100vh - 75px); /*ocupa o resto da tela menos o nav bar*/
+    width: 100%;
+}
+
+/* Cria o fundo desfocado APENAS para esta tela */
+.login-wrapper::before{
+    content: "";
+    position: fixed; /*nn mexe a imagem ao rolar*/
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+/* CAMINHO DA SUA IMAGEM NO DJANGO */
+    background-image: url('/static/Images/bola_volei.png'); 
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Aplica o desfoque */
+    filter: blur(8px);
+
+    /* Opcional: Escurece um pouco o fundo para o formulário destacar mais */
+    background-color: rgba(0, 0, 0, 0.2);
+    background-blend-mode: darken;
+
+    z-index: -1; /* Joga a imagem para trás de tudo */
+    
+    transform: scale(1.1); /* Evita bordas brancas causadas pelo blur */
+}   
+
+/* Garante que o formulário ocupe o tamanho correto */
+form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Força a cor do h1 especificamente dentro do título do login */
+.login-titulo h1 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Formulário ajustado */
+.login-container {
+    background-color: #083250;
+    color: #ffffff;
+    width: 100%; 
+    max-width: 350px;
+    padding: 30px 20px; 
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+/* Espaçamento dos inputs */
+.form-login-grupo {
+    margin-bottom: 15px;
+}
+
+.form-login-grupo input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Alinhamento do botão de cadastro abaixo do form */
+.botao-organizador {
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 350px;
+}
+
+/* Estilo do botão Entrar */
+#botao-entrar-login {
+    width: 100%; 
+    background-color: #007bff; 
+    color: #ffffff;            
+    padding: 10px 24px;        
+    font-size: 16px;           
+    font-weight: bold;         
+    border: none; 
+    border-radius: 5px;        
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: all 0.3s ease; 
+    cursor: pointer;
+}
+
+/* Efeito de hover corrigido (removi o "a" já que é um botão no HTML) */
+#botao-entrar-login:hover {
+    background-color: #0056b3; 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); 
+}
+
+#botao-entrar-login:active {
+    transform: translateY(0); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+/* Estilo do botão Não Possuo Cadastro */
+.botao-organizador a {
+    display: block; /* Mudado para block para ocupar toda a largura do alinhamento */
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+}
+

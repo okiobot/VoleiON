@@ -17,7 +17,33 @@
     <div>
         {{ usuario.cpf }}
     </div>
-</body>
 
+
+<h2>Histórico de Partidas</h2>
+    <table>
+        <tr>
+            <th>Data</th>
+            <th>Resultado</th>
+            <th>Pontos</th>
+        </tr>
+
+        {% for partida in historico %}
+
+        <tr>
+            <td>{{ partida.registro.data_hora|date:"d/m/Y" }}</td>
+                <td>
+                    {% if partida.venceu == partida.time %}
+                    🟢 Vitória
+                    {% else %}
+                    🔴 Derrota
+            {% endif %}
+                </td>
+            <td>
+            {{ partida.pontos }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
 
 <a href = "{% url 'home' %}">Voltar</a>

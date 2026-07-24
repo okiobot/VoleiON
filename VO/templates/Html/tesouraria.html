@@ -5,6 +5,7 @@
 
 <body>
     <form method="post">
+        <a href= "{% url 'home' %}"> Voltar </a>
         {% csrf_token %}
         <table>
             <tr>
@@ -26,7 +27,6 @@
                     Pendente
                     <input type="checkbox" name="usuarios_pagos" value="{{ usuario.id }}"> 
                     {% endif %}
-
                 </td>
             {% endfor %}
             </tr>

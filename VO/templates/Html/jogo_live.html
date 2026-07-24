@@ -24,7 +24,7 @@
             <h3>Time A</h3>
             <ul class="jogadores-lista">
                 {% for jogador in timeA %}
-                    <li class="avatar-jogador" data-time="a" data-pontos="0" onclick="gerenciarPonto(event, this, 'somar')">
+                    <li class="avatar-jogador" data-id="{{ jogador.id }}" data-time="a" data-pontos="0" onclick="gerenciarPonto(event, this, 'somar')">
                         <span class="nome-player">{{ jogador.username }}</span>
                         
                         <div class="controles-ponto">
@@ -40,7 +40,7 @@
             <h3>Time B</h3>
             <ul class="jogadores-lista">
                 {% for jogador in timeB %}
-                    <li class="avatar-jogador" data-time="b" data-pontos="0" onclick="gerenciarPonto(event, this, 'somar')">
+                    <li class="avatar-jogador" data-id="{{ jogador.id }}" data-time="b" data-pontos="0" onclick="gerenciarPonto(event, this, 'somar')">
                         <span class="nome-player">{{ jogador.username }}</span>
                         
                         <div class="controles-ponto">
@@ -54,7 +54,7 @@
     </div>
 
     <div class="acoes-partida">
-        <a href="{% url 'registro_jogo' %}" class="btn-voltar">Encerrar e Voltar</a>
+        <button class="btn-voltar" onclick="encerrarPartida()"> Encerrar Partida </button>
     </div>
 </div>
 
@@ -98,6 +98,73 @@ function modificarPlacarGeral(time, valor) {
     
     elementoPlacar.textContent = pontosTime;
 }
+
+function encerrarPartida() {
+    if (!confirm("Deseja realmente finalizar esta partida?")) 
+        return;
+
+    const placarA = parseInt(document.getElementById("placar-time-a").textContent);
+    const placarB = parseInt(document.getElementById("placar-time-b").textContent);
+    const jogadores = [];
+    
+    document.querySelectorAll(".avatar-jogador").forEach(jogador => {
+        jogadores.push({
+            id: jogador.dataset.id,
+            pontos: parseInt(jogador.dataset.pontos)
+        });
+    });
+
+    console.log({
+    placarA,
+    placarB,
+    jogadores
+});
+
+    fetch(`/jogo/{{ jogo.id }}/finalizar/`, {
+        method: "POST",
+        headers: {
+            "Content-Type":"application/json",
+            "X-CSRFToken":getCookie("csrftoken")
+        },
+        body:JSON.stringify ({
+            placarA:parseInt(document.getElementById("placar-time-a").textContent),
+            placarB:parseInt(document.getElementById("placar-time-b").textContent),
+            jogadores
+        })
+    })
+    .then(async r => {
+
+    if (!r.ok) {
+        const texto = await r.text();
+        console.error(texto);
+        throw new Error("Erro no servidor");
+    }
+
+    return r.json();
+
+})
+.then(data => {
+
+    console.log(data);
+
+});
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 </script>
 
 <style>

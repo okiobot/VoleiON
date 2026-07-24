@@ -243,43 +243,95 @@ def deletar_jogo(request, id):
 
 def iniciar_jogo(request, id):
     usuario_id = request.user.id
-    jogo = Registro.objects.get(id=id)
+    registro = get_object_or_404(Registro, id=id)
     
-    if jogo.participantes.count() < 1:
+    if registro.participantes.count() < 1:
         print("O jogo não pode iniciar com menos de 2 jogadores")
         #return redirect('registro_jogo')
+        
+    registro.status = ("andamento")
+    registro.save()
     
-    participantes = list(jogo.participantes.all())
-    random.shuffle(participantes)
+    if not Partida.objects.filter(registro=registro).exists():
     
-    metade = len(participantes) // 2
+        participantes = list(registro.participantes.all())
+        random.shuffle(participantes)
+        
+        metade = len(participantes) // 2
+        
+        timeA = participantes[:metade]
+        timeB = participantes[metade:]
+        
+        
+        for jogador in timeA:
+            Partida.objects.create(
+                usuario = jogador,
+                registro = registro,
+                time = "A"
+            )
     
-    timeA = participantes[:metade]
-    timeB = participantes[metade:]
-    
-    return render(request, "Html/jogo_live.html", {"jogo" : jogo,
+        for jogador in timeB:
+            Partida.objects.create(
+                usuario = jogador,
+                registro = registro,
+                time = "B"
+            )
+
+    else:
+        timeA = [p.usuario for p in Partida.objects.filter(registro=registro, time="A")]
+        timeB = [p.usuario for p in Partida.objects.filter(registro=registro, time="B")]
+
+    return render(request, "Html/jogo_live.html", {"jogo" : registro,
                                                  "timeA" : timeA,
                                                  "timeB" : timeB})
 
-#recebe um usuario e retorna True se a data de nascimento for igual a data atual
-def aniversariante_Check(usuario):
-
-    data_atual = date.today()
-
-    if usuario.data_nasc.day == data_atual.day and usuario.data_nasc.month == data_atual.month:
-        return True
-    return False
-
-#retorna retorna todos os aniversariantes do dia no BD
-def aniversariante_dia(request, id):
-   
-   usuario = get_object_or_404(Usuario, id = usuario_id)
-   
-   data_atual = date.today()
-   
-   aniversariantes_dia = Usuario.objects.filter(data_nasc__day=data_atual.day, data_nasc__month=data_atual.month).only('username', 'data_nasc')
-   
-   return render(request, "Html/aniversariantes_dia.html", {"aniversariantes_dia": aniversariantes_dia})
+def finalizar_jogo(request, id):
+    if request.method == "POST":
+        print("erro")
+        
+    registro = get_object_or_404(Registro, id=id)
+    
+    dados = json.loads(request.body)
+    print(dados)
+    
+    placarA = dados["placarA"]
+    placarB = dados["placarB"]
+    jogadores = dados["jogadores"]
+    
+    registro.placarA = placarA
+    registro.placarB = placarB
+    registro.status = "finalizado"
+    
+    if placarA > placarB:
+        vencedor = "A"
+    if placarB > placarA:
+        vencedor = "B"
+        
+    print("Placar A:", placarA)
+    print("Placar B:", placarB) 
+    print(vencedor)
+        
+    
+    registro.vencedor = vencedor
+    registro.save()
+    
+    for jogador in jogadores:
+        partida = Partida.objects.get(
+            registro=registro,
+            usuario_id=jogador["id"]
+        )
+        
+        print(
+        partida.usuario.username,
+        partida.time,
+        vencedor,
+        jogador["pontos"])
+        
+        partida.pontos = jogador["pontos"]
+        partida.venceu = vencedor
+        partida.save()
+        
+    return(JsonResponse({"status" : "ok"}))
     
 def tesouraria(request):
     usuario_id = request.user.id
@@ -304,17 +356,6 @@ def tesouraria(request):
         return redirect("tesouraria")
     
     return render(request, "Html/tesouraria.html", {"usuarios" : Usuario.objects.all()})
-
-#retorna todos os aniversariantes do mes no BD
-def aniversariante_mes(request, id):
-    usuario = get_object_or_404(Usuario, id = usuario_id)
-    
-    data_atual = date.today()
-    
-    aniversariantes_mes = Usuario.objects.filter(data_nasc__month=data_atual.month).only('username', 'data_nasc')
-    
-    #Não sei o url coerreto para essa função, deixei essa como placeholder
-    return render(request, "Html/aniversariantes_mes.html", {"aniversariantes_mes": aniversariantes_mes})
   
 def deletar_usuario(request):
     usuario_id = request.user.id
@@ -349,14 +390,6 @@ def logs(request):
     
     return render(request, "Html/logs.html", {"registros" : Log.objects.all()})
 
-def get_aniver_all(request):
-    aniversariantes = Usuario.objects.annotate(
-        dia_aniversario=models.functions.ExtractDay('data_nasc'),
-        mes_aniversario=models.functions.ExtractMonth('data_nasc')
-    ).order_by('mes_aniversario', 'dia_aniversario').only('username', 'data_nasc')
-    #Não sei o url coerreto para essa função, deixei essa como placeholde
-    return render(request, "Html/aniversariantes_all.html", {"aniversariantes": aniversariantes})
-
 def sair(request):
     if "usuario_id" in request.session:
         del request.session["usuario_id"]
@@ -373,4 +406,6 @@ def perfil(request):
         
     dados = get_object_or_404(Usuario, id=usuario_id)
     
-    return render(request, "Html/perfil.html", {"usuario" : dados})
+    historico = Partida.objects.filter(usuario=request.user).select_related("registro")
+    
+    return render(request, "Html/perfil.html", {"usuario" : dados, "historico" : historico})

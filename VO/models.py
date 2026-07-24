@@ -29,24 +29,39 @@ class Usuario(AbstractUser, PermissionsMixin):
                                                          default="m")
     
     pagamento = models.CharField(max_length=50, default="Pendente" ,choices=[("pago","Pago"),("pendente","Pendente")], null=False)
-    
-class Jogo(models.Model):
-    dia = models.DateField()
-    participantes = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    vencedor = models.CharField(max_length=200)
-
-class Inscrito(models.Model):
-    id = models.AutoField(primary_key=True)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    jogo = models.ForeignKey(Jogo, on_delete=models.CASCADE)
-    data_inscricao = models.DateTimeField(default=timezone.now)
 
 class Registro(models.Model):
     nome = models.TextField(max_length=255)
     data_hora = models.DateTimeField(default = timezone.now)
     participantes = models.ManyToManyField(Usuario, related_name='jogos_inscritos', blank=True)
     criador = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20,
+                             choices=[("aberto","Aberto"),
+                                      ("andamento", "Em andamento"),
+                                      ("finalizado","Finzalizado")],
+                             default="aberto"
+                            )
     
+    placarA = models.PositiveIntegerField(default=0)
+    placarB = models.PositiveIntegerField(default=0)
+    vencedor = models.CharField(
+        max_length=1,
+        choices = [("A","Time A"),("B","Time B")],
+        null=True, blank=True)
+                            
+class Partida(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    registro = models.ForeignKey(Registro, on_delete=models.CASCADE)
+    time = models.CharField(max_length=1, choices=[("A", "Time A"),("B", "Time B")])
+    venceu = models.CharField(max_length=1, choices=[("A", "Time A"),("B", "Time B")])
+    pontos = models.IntegerField(default=0)
+
+class Inscrito(models.Model):
+    id = models.AutoField(primary_key=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    jogo = models.ForeignKey(Registro, on_delete=models.CASCADE)
+    data_inscricao = models.DateTimeField(default=timezone.now)
+
 class Log(models.Model):
     data_hora = models.DateField(default = timezone.now)
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)

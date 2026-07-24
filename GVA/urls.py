@@ -26,7 +26,6 @@ urlpatterns = [
     path('edição', views.editar_usuario, name="editar_usuario"),
     path('registrar', views.registro_jogo, name="registro_jogo"),
     path('deletar/<int:id>/', views.deletar_jogo, name='deletar_jogo'),
-    path('aniversariantes_all/', views.get_aniver_all, name="aniversariantes_all"),
     path('tesouraria', views.tesouraria, name="tesouraria"),
     path('deletar', views.deletar_usuario, name="deletar_usuario"),
     path('registros', views.logs, name="logs"),
@@ -35,5 +34,6 @@ urlpatterns = [
     path('jogo/<int:id>/sair/', views.sair_jogo, name="sair_jogo"),
     path('perfil', views.perfil, name="perfil"),
     path('jogo/<int:id>/partida/', views.iniciar_jogo, name="partida"),
+    path('jogo/<int:id>/finalizar/', views.finalizar_jogo, name="finzalizar_partida"),
     path('sair', views.sair, name="sair")
 ]

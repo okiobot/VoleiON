@@ -22,7 +22,7 @@
     height: 100%;
 
 /* CAMINHO DA SUA IMAGEM NO DJANGO */
-    background-image: url('/static/Images/bola_volei.png'); 
+    background-image: url('/static/Assets/bola_volei.png'); 
     
     background-size: cover;
     background-position: center;
@@ -124,3 +124,78 @@ form {
     text-decoration: none;
 }
 
+/*/////////////////////////////////////////*/
+
+/*Animacao de fade*/
+
+
+/* Container pai precisa ser relativo para conter o círculo absoluto */
+.texto-container {
+    position: relative;
+    display: inline-block;
+    overflow: visible; /* Garante que o círculo não crie barras de rolagem fora da tela */
+    padding: 10px;
+}
+
+.titulo-revelacao {
+    font-size: 40px;
+    color: #fff;
+    position: relative;
+    z-index: 2; /* Mantém o texto sempre visível acima do círculo */
+    
+    /* Estado inicial: escondido e levemente rebaixado */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Transição suave */
+}
+
+/* Classe que faz o texto subir e aparecer */
+.titulo-revelacao.mostrar-texto {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Definindo a curva usando caminhos SVG (Curva Bézier) */
+.circulo-animado {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background-color: #fffa00;
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0.7;
+    filter: blur(5px);
+    
+    /* Desenha o caminho da curva (começa fora da tela, faz uma barriga para baixo e sai) */
+    offset-path: path('M 600,-600 Q 260,-350 200,50');
+    
+    /* Estado inicial */
+    offset-distance: 0%;
+    animation: none;
+}
+
+/* Animação que percorre o caminho do offset */
+@keyframes seguirCurva {
+    0% {
+        offset-distance: 0%;
+        opacity: 0.7;
+    }
+    /* Vai devagar: chega na metade do caminho (ponto mais baixo da curva) em 70% do tempo */
+    70% {
+        offset-distance: 92%;
+        opacity: 0.7;
+    }
+    /* Volta muito mais rápido: gasta apenas os outros 30% do tempo para retornar ao início */
+    100% {
+        offset-distance: 0%;
+        opacity: 0;
+    }
+}
+
+.animar-circulo {
+    animation: seguirCurva 2s ease-in-out forwards;
+}
+
+.circulo-animado, .texto-container {
+    pointer-events: none; /* Garante que cliques atravessem esses elementos e cheguem no botão */
+}

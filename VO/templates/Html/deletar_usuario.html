@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+{% extends "Html/base.html" %}
+{% load static %}
 
-<head>
-    Deletar usuário
-</head>
+{% block content %}
 
 <body>
     <form method="post">
         {% csrf_token %}
         <label for="senha"> Senha </label>
         <input name="senha" type="text" required placeholder="Digite sua senha">
-
-    <button type="submit"> Confirmar </button>
-</body>
-
-<a href = "{% url 'home' %}">Voltar</a>
+        
+        <button type="submit"> Confirmar </button>
+    </body>
+    
+    <a href = "{% url 'home' %}">Voltar</a>
+{% endblock %}

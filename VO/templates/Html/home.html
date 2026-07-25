@@ -1,21 +1,44 @@
-{% extends "base.html" %}
+{% extends "Html/base.html" %}
 {% load static %}
-<html lang="pt-br">
+{% block content %}
 
-<head>
-    teste
-</head>
-<body>
-<a href = "{% url 'ver_usuarios' %}">
-        <button class="form-control-sm" id="botao-entrar-login">Ver usuários</button>
 
-<a href = "{% url 'editar_usuario' %}">
-        <button class="form-control-sm" id="botao-entrar-login">Editar perfil</button>
 
-<a href = "{% url 'registro_jogo' %}">
-        <button class="form-control-sm" id="botao-entrar-login">Registros</button>
+        
 
-<a href = "{% url 'tesouraria' %}">
-        <button class="form-control-sm" id="botao-entrar-login">Tesouraria</button>
+        
 
-</body>
+{% endblock %}
+
+
+
+
+<!--
+ <button onclick="abrirCalendario()">
+            Abrir Calendário
+        </button>
+
+        <div id="modalCalendario" class="modal">
+
+            <div class="modal-content">
+
+                <span class="close" onclick="fecharCalendario()">
+                    &times;
+                </span>
+
+                <h2>Eventos</h2>
+
+                <div id="calendar"></div>
+
+            </div>
+        </div>
+
+
+        <section class="botoes-principais">
+          <div class="botao">
+            <a href="{% url 'registro_jogo' %}">
+              <img src="{% static 'Images/veado.png' %}" alt="templo grego" title="Eventos inscritos">
+            </a>
+          </div>
+        </section>
+-->

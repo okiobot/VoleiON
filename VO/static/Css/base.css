@@ -1,14 +1,13 @@
+/* Paleta de cores de referência: */
+/* Amarelo: #fffa00 */
+/* Azul escuro: #0b4874 */
+/* Verde/Azulado: #1e6363 */
 
-
-/*#fffa00*/
-/*0b4874*/
-/*1e6363*/
-
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins',sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -16,115 +15,42 @@ body {
     padding: 0;
     min-height: 100vh;
     display: flex;
-    flex-direction: column; /* Alinha a navbar no topo e o container embaixo */
-    background-color: #0b4874; /* Cor de fundo opcional para o site */
-    font-family: Arial, sans-serif;
+    flex-direction: column;
+    background-color: #0b4874;
 }
 
-
-nav{
+nav {
+    position: fixed; /* Fixa o elemento na tela */
+    top: 0;          /* Cola no topo absoluto */
+    left: 0;         /* Cola na borda esquerda */
+    width: 100%;     /* Ocupa toda a largura da tela */
+    z-index: 1000;   /* Garante que ela fique por cima de outros elementos */
+}
+/* Ajuste para a Navbar do Bootstrap fixada no topo */
+.navbar {
     position: fixed;
-    left: 0;
     top: 0;
-    height: 75px;
+    left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1030;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.8);
 }
 
-nav .navbar{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    width: 90%;
-    margin: auto;
-}
-
-nav .navbar .logo a{
-    color: #fff;
-    font-size: 27px;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-nav .navbar .menu{
-    display: flex;
-}
-
-.navbar .menu li{
-    list-style: none;
-    margin: 0 15px;
-}
-
-.navbar .menu li a{
-    color: #fff;
-    font-size: 17px;
-    font-weight: 500;
-    text-decoration: none;
-}
-
-
-section{
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #0099ff;
-    font-size: 70px;
-}
-
-/* Centraliza absolutamente tudo o que for inserido dentro de qualquer tela */
+/* Container principal compensando a navbar fixa */
 .container {
-    flex: 1; /* Faz o container ocupar todo o espaço restante da tela abaixo da nav */
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centraliza verticalmente */
-    align-items: center;     /* Centraliza horizontalmente */
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    padding: 20px;           /* Margem de segurança para telas de celular */
-    padding-top: 95px;
+    padding: 20px;
+    padding-top: 95px; /* Empurra o conteúdo para baixo da navbar fixa */
     box-sizing: border-box;
 }
 
-.modal{
-    display: none;
-    padding-top: 0px;
-    position: fixed; 
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
 
-    background-color: rgba(0,0,0,0.7);
-}
 
-.modal-content{
-    padding-top: 0px; 
-    background: white;
-    width: 45%;
-    height: 100%;
-    margin: 5% 0 5% 5%;
-    margin-left: 0;
-    margin-top: 0;
-    padding-top: 5%;
-    border-radius: 10px;
-}
-
-.close{
-    float: right;
-    font-size: 30px;
-    cursor: pointer;
-    padding-right: 5%;
-}
-
-#calendar{
-    padding-left: 1%;
-    max-width:700px;
-    height:70%;
-}
 
 
 

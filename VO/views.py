@@ -50,7 +50,7 @@ def cadastro(request):
         
             else:
                 
-                novo_user = Usuario.objects.create_user(username=nome, cpf=cpf, dataA=data, telefone=telefone, funcao=funcao, numeroc=numeroc, nomec=nomec, 
+                novo_user = Usuario.objects.create_user(username=nome, cpf=cpf, data_nasc=data, telefone=telefone, funcao=funcao, numeroc=numeroc, nomec=nomec, 
                                                    quantidadec=quantidadec, tamanhoc=tamanhoc, tipoc=tipoc) 
                 novo_user.set_password(senha)
                 novo_user.save()        
@@ -66,17 +66,26 @@ def loginU(request):
         cpf = request.POST.get("cpf")
         senha = request.POST.get("senha")
         
-        dados_preenchidos = {"cpf_preenchido" : cpf,
-                             "senha_preenchida" : senha}
+        
         
         user = authenticate(request, username=cpf, password=senha)            
                 
         if user is not None:
             login(request, user)
+            # Verifica se é uma requisição via JavaScript (Fetch)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({"status": "sucesso", "redirect_url": reverse('home')})
             return redirect("home")
         else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({"status": "erro", "mensagem": "CPF ou senha incorretos"}, status=400)
             print("Nome ou senha incorreto")
             return render(request, "Html/login.html")
+
+            """return redirect("home")
+        else:
+            print("Nome ou senha incorreto")
+            return render(request, "Html/login.html")"""
         
     else:
         return render(request, "Html/login.html")
@@ -90,13 +99,17 @@ def home(request):
 
         eventos_json.append({
             "id": registro.id,
+            "name": registro.nome,
             "title": f"Jogo {registro.id}",
             "start": registro.data_hora.strftime("%Y-%m-%d")
         })
 
-    return render(request, "Html/base.html", {
+    return render(request, "Html/home.html", {
         "eventos_json": eventos_json
     })
+
+
+
 
 def ver_usuario(request):
     usuario_id = request.user.id

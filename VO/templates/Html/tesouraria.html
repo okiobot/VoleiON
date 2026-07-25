@@ -1,7 +1,7 @@
-<!DOCTYPE html>
-<head>
-    teste
-</head>
+{% extends "Html/base.html" %}
+{% load static %}
+
+{% block content %}
 
 <body>
     <form method="post">
@@ -21,17 +21,18 @@
                     Pago
                     <input type="checkbox" checked disabled>     
                     <button type="submit" name="cancelar" value="{{ usuario.id }}"> Cancelar </button>
-
+                    
                     {% else %}
                     Pendente
                     <input type="checkbox" name="usuarios_pagos" value="{{ usuario.id }}"> 
                     {% endif %}
-
+                    
                 </td>
-            {% endfor %}
+                {% endfor %}
             </tr>
         </table>
         <button>Registrar</button>    
     </form>
 </body>
 <a href = "{% url 'home' %}">Voltar</a>
+{% endblock %}

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
-
+<link rel="stylesheet" href="{% static 'Css/login.css' %}">
+<script defer src="{% static 'Java_Script/login.js' %}"></script>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -16,30 +17,48 @@
 {% endblock %}
 
 {% block content %}
-    <div class="login-wrapper">
-        <form method="post">
-                {% csrf_token %}
-                <div class="login-container">
-                    <div class="login-titulo">
-                        <h1>Login</h1>
-                    </div>
-
-                    <div class="formulario-login">
-                        <div class="form-login-grupo">
-                            <input name="cpf" value="{{ cpf_preenchido }}" type = "text" 
-                                inputmode="numeric" pattern="\d*" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '');" autocomplete="off" required placeholder="CPF">
-                        </div>
+    <div class="login-wrapper" style="position: relative;">
+        <div class="texto-container" style="pointer-events: none; z-index: 1;">
                     
+            <!-- O círculo animado -->
+            <div class="circulo-animado"></div>
 
-                        <div class="form-login-grupo">
-                            <input type="password" name="senha" required autocomplete="off" placeholder="Senha" maxlength="255">
+            <!-- O texto que vai receber a animação por cima -->
+            <h1 class="titulo-revelacao">Bem-vindo ao VoleiON, {{ request.user.username }}!</h1>
+
+            <!-- Imagem que vai aparecer temporariamente (inicialmente escondida) -->
+            <img id="imagemEvento" src="{% static 'Assets/veado.png' %}" alt="Surpresa" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; width: 150px;">
+            
+            <!-- Elemento de áudio (substitua o src pelo caminho do seu som) -->
+            <audio id="somEvento" src="{% static 'Assets/click.mp3' %}?v=4" volume="0.5"></audio>
+        </div>
+
+
+        <!-- Camada do Formulário (z-index maior para garantir que os inputs e botões fiquem clicáveis) -->
+        <div class="login-container" style="position: relative; z-index: 10;">
+            <form method="post">
+                    {% csrf_token %}
+                    <div class="login-container">
+                        <div class="login-titulo">
+                            <h1>Login</h1>
                         </div>
 
-                        <div>
-                            <button class="form-control-sm" id="botao-entrar-login">Entrar</button>
+                        <div class="formulario-login">
+                            <div class="form-login-grupo">
+                                <input name="cpf" value="{{ cpf_preenchido }}" type = "text" 
+                                    inputmode="numeric" pattern="\d*" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '');" autocomplete="off" required placeholder="CPF">
+                            </div>
+                        
+
+                            <div class="form-login-grupo">
+                                <input type="password" name="senha" required autocomplete="off" placeholder="Senha" maxlength="255">
+                            </div>
+
+                            <div>
+                                <button type="button" class="form-control-sm" id="botao-entrar-login" onclick="iniciarLogin(event)">Entrar</button>
+                            </div>
                         </div>
-                    </div>
-        </form>
+            </form>
         
         <div class="botao-organizador">
             <a href = "{% url 'cadastro' %}">
@@ -47,5 +66,94 @@
             </a>
         </div>
     </div>
+
+    
+<script>
+function fazerLogin() {
+    console.log("Clique detectado! Iniciando script...");
+
+    const form = document.getElementById('formLogin');
+    const botaoEntrar = document.getElementById('botao-entrar-login');
+    const circulo = document.querySelector('.circulo-animado');
+    const imagem = document.getElementById('imagemEvento');
+    const som = document.getElementById('somEvento');
+    const titulo = document.querySelector('.titulo-revelacao'); 
+
+    // 1. Valida se preencheu CPF e Senha
+    const cpfInput = form.querySelector('[name="cpf"]');
+    const senhaInput = form.querySelector('[name="senha"]');
+
+    if (!cpfInput.value || !senhaInput.value) {
+        alert("Por favor, preencha o CPF e a senha.");
+        return;
+    }
+
+    // Trava o botão para não clicar duas vezes
+    botaoEntrar.disabled = true;
+
+    // 2. DISPARA A ANIMAÇÃO
+    if (circulo) {
+        circulo.style.display = 'block';
+        circulo.style.opacity = '0.7';
+        circulo.classList.remove('animar-circulo');
+        void circulo.offsetWidth; // Reinicia animação CSS
+        circulo.classList.add('animar-circulo');
+    }
+
+    // Tempo da animação (2.1s para mostrar elementos)
+    setTimeout(() => {
+        if (imagem) imagem.style.display = 'block';
+        if (titulo) titulo.classList.add('mostrar-texto');
+        
+        if (som) {
+            som.load();
+            som.currentTime = 0.0;
+            som.volume = 0.5;
+            som.play().catch(err => console.log("Áudio:", err));
+            
+            setTimeout(() => {
+                som.pause();
+                som.currentTime = 0;
+            }, 500);
+        }
+        
+        setTimeout(() => {
+            if (imagem) imagem.style.display = 'none';
+        }, 500);
+
+    }, 2100);
+
+    // 3. APÓS 3 SEGUNDOS: Envia os dados para a View do Django
+    setTimeout(() => {
+        const formData = new FormData(form);
+        const csrfInput = form.querySelector('[name=csrfmiddlewaretoken]');
+        const csrfToken = csrfInput ? csrfInput.value : '';
+
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                window.location.href = data.redirect_url;
+            } else {
+                alert(data.mensagem || "Erro ao fazer login.");
+                botaoEntrar.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error("Erro no Fetch:", err);
+            // Se der erro de JSON/Fetch, envia o formulário no formato normal
+            form.submit();
+        });
+
+    }, 3000);
+}
+</script>
 
 {% endblock %}

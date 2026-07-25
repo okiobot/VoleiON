@@ -1,8 +1,7 @@
-<!DOCTYPE html>
+{% extends "Html/base.html" %}
+{% load static %}
 
-<head>
-    Registros
-</head>
+{% block content %}
 
 <body>
     <div>
@@ -23,10 +22,11 @@
                 <td> {{ registro.usuario.username }} </td>
                 <td> {{ registro.jogo }} </td>
                 <td> {{ registro.acao }} </td>
-            {% endfor %}
+                {% endfor %}
             </tr>
         </table>
     </div>
 </body>
 
 <a href = "{% url 'home' %}">Voltar</a>
+{% endblock %}

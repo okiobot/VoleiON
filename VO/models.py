@@ -48,6 +48,9 @@ class Registro(models.Model):
         max_length=1,
         choices = [("A","Time A"),("B","Time B")],
         null=True, blank=True)
+    
+    mvp = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True, related_name="jogos_mvp")
+    mvp_pontos = models.PositiveIntegerField(default=0)
                             
 class Partida(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)

@@ -67,15 +67,44 @@ document.addEventListener('DOMContentLoaded', function () {
                             btnIniciar.classList.add('hidden');
                             btnSair.classList.add('hidden');
 
-                            if (dataAtualizada.criador || dataAtualizada.criador) {
-                                btnDeletar.classList.remove('hidden');
-                                if (dataAtualizada.quant_participantes >= 2) {
-                                    btnIniciar.classList.remove('hidden');
+                            btnInscrever.disabled = false;
+                            btnInscrever.textContent = "Inscrever-se";
+
+                            if (dataAtualizada.status === "aberto") {
+
+                                if (dataAtualizada.criador) {
+
+                                    btnDeletar.classList.remove("hidden");
+
+                                    if (dataAtualizada.quant_participantes >= 2) {
+                                        btnIniciar.classList.remove("hidden");
+                                    }
+
+                                } else if (dataAtualizada.ja_inscrito) {
+
+                                    btnSair.classList.remove("hidden");
+
+                                } else {
+
+                                    btnInscrever.classList.remove("hidden");
+
                                 }
-                            } else if (dataAtualizada.ja_inscrito) {
-                                btnSair.classList.remove('hidden');
-                            } else {
-                                btnInscrever.classList.remove('hidden');
+
+                            }
+
+                            else if (dataAtualizada.status === "andamento") {
+
+                                btnInscrever.classList.remove("hidden");
+                                btnInscrever.textContent = "🏐 Partida em andamento";
+                                btnInscrever.disabled = true;
+
+                            }
+
+                            else if (dataAtualizada.status === "finalizado") {
+
+                                btnInscrever.classList.remove("hidden");
+                                btnInscrever.textContent = "🏁 Partida finalizada";
+                                btnInscrever.disabled = true;
                             }
                         });
                     }
@@ -88,15 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         ul.appendChild(li);
                     });
 
-                    const btnInscrever = document.getElementById('btn-inscrever');
-                    const btnSair = document.getElementById('btn-sair-jogo');
-                    const btnDeletar = document.getElementById('btn-deletar-jogo');
-                    const btnIniciar = document.getElementById('btn-iniciar-jogo');
-
-                    btnIniciar.classList.add('hidden');
-                    btnInscrever.classList.add('hidden');
-                    btnSair.classList.add('hidden');
-                    btnDeletar.classList.add('hidden');
 
                     const Criador = data.criador || data.criador;
                     if (Criador) {

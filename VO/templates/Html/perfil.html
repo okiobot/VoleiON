@@ -39,7 +39,12 @@
             {% endif %}
                 </td>
             <td>
-            {{ partida.pontos }}
+                {{ partida.pontos }}
+            </td>
+            <td>
+                {% if partida.registro.mvp == usuario %}
+                    mvp {{ partida.registro.mvp_pontos }}
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

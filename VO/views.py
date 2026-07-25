@@ -213,14 +213,21 @@ def detalhe_jogo(request, id):
         "quant_participantes": jogo.participantes.count(),
         "participantes" : lista_participantes,
         "ja_inscrito" : ja_inscrito,
-        "criador" : criador}
+        "criador" : criador,
+        "status": jogo.status}
     
     return JsonResponse(dados)
 
 def inscrever_jogo(request, id):
     if request.method == "POST":
-        jogo = get_object_or_404(Registro, id=id)
-        jogo.participantes.add(request.user)
+        registro = get_object_or_404(Registro, id=id)
+       
+        if registro.status != "aberto":
+            print("comecou")
+            return JsonResponse({"erro":"A partida já foi iniciada"}, status=400)
+        
+        registro.participantes.add(request.user)
+       
         return JsonResponse({"sucesso" : True, "mensagem" : "Inscrição realizada"})
     return JsonResponse({"sucesso" : False}, status = 400)
 
@@ -249,6 +256,10 @@ def iniciar_jogo(request, id):
         print("O jogo não pode iniciar com menos de 2 jogadores")
         #return redirect('registro_jogo')
         
+    if registro.status != "aberto":
+        print("O jogo já foi iniciado")
+        return redirect('registro_jogo')
+    
     registro.status = ("andamento")
     registro.save()
     
@@ -261,7 +272,6 @@ def iniciar_jogo(request, id):
         
         timeA = participantes[:metade]
         timeB = participantes[metade:]
-        
         
         for jogador in timeA:
             Partida.objects.create(
@@ -315,6 +325,11 @@ def finalizar_jogo(request, id):
     registro.vencedor = vencedor
     registro.save()
     
+    mvp = max(jogadores, key=lambda j: j["pontos"])
+    registro.mvp_id = mvp["id"]
+    registro.mvp_pontos = mvp["pontos"]
+    registro.save()
+        
     for jogador in jogadores:
         partida = Partida.objects.get(
             registro=registro,
@@ -330,6 +345,7 @@ def finalizar_jogo(request, id):
         partida.pontos = jogador["pontos"]
         partida.venceu = vencedor
         partida.save()
+        
         
     return(JsonResponse({"status" : "ok"}))
     
